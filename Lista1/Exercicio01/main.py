@@ -1,6 +1,11 @@
+from model.Funcionario import Funcionario
+
 def principal():
-    print('Executando...')
+    funcionario1 = Funcionario()
+    funcionario1.setNome("João")
+    funcionario1.setSalarioBruto(2000)
+    funcionario1.setTotalAcrecimo(500)
+    funcionario1.setTotalDesconto(300)
+    funcionario1.calcularSalarioLiquido()
 
-
-if __name__ == '__main__':
-    principal()
+    print(funcionario1)

@@ -1,10 +1,10 @@
 class Funcionario:
 
-    def __init__(self): 
-        self.__nome = None 
-        self.__salarioBruto = None
-        self.__totalAcrecimo = None
-        self.__totalDesconto = None
+    def __init__(self,nome, salarioBruto, totalAcrecimo, totalDesconto): 
+        self.__nome = nome
+        self.__salarioBruto = salarioBruto
+        self.__totalAcrecimo = totalAcrecimo
+        self.__totalDesconto = totalDesconto
         self.__calcularSalarioLiquido = None
 
     def setNome(self, nome):
@@ -14,8 +14,10 @@ class Funcionario:
         return self.__nome  
 
     def setSalarioBruto(self, salarioBruto):
+        if salarioBruto < 0:
+            ValueError("O salário bruto não pode ser negativo.")
         self.__salarioBruto = salarioBruto
-
+      
     def getSalarioBruto(self):
         return self.__salarioBruto
 
@@ -34,8 +36,8 @@ class Funcionario:
 
 
     def calcularSalarioLiquido(self):
-        calculosalario = self.__salarioBruto + self.__totalAcrecimo - self.__totalDesconto
-        return calculosalario
+        self.__calcularSalarioLiquido = self.__salarioBruto + self.__totalAcrecimo - self.__totalDesconto
+        return self.__calcularSalarioLiquido
 
     def __str__(self):
         return f'NOME: {self.getNome()}\nSALARIO BRUTO: {self.getSalarioBruto()}\nTOTAL ACRECIMO: {self.getTotalAcrecimo()}\nTOTAL DESCONTO: {self.getTotalDesconto()}\nSALARIO LIQUIDO: {self.calcularSalarioLiquido()}\n'

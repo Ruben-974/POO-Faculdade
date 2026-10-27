@@ -18,6 +18,15 @@ def principal():
    conta2.exibirExtrato()
 
 
+   try:
+        if conta2.sacar < conta2.getsaldo():
+            raise ValueError("O saldo da conta não pode ser negativo.")
+   except ValueError as error:
+        print(error)
+
+   finally:
+       print("Execução finalizada.")
+
 
 
 

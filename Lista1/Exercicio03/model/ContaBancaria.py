@@ -35,8 +35,7 @@ class ContaBancaria:
             self.__saldo -= valor
             self.__historico.append(f'Saque: R${valor:.2f}')
             print(f'Saque de R${valor:.2f} realizado com sucesso.')
-        else:
-            print('Saldo insuficiente ou valor de saque invalido.')
+        raise ValueError('Saldo insuficiente ou valor de saque invalido.\n')
 
    
    

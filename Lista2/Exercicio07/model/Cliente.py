@@ -1,9 +1,9 @@
 from model.Usuario import Usuario
 
 
-class Administrador(Usuario):
+class Cliente(Usuario):
     def tipo(self):
-        return "Administrador"
+        return "Cliente"
 
     def menu(self):
-        return "1 - Ver catálogo\n2 - Todos os pedidos\n3 - Cadastrar usuário\n4 - Sair"
+        return "1 - Ver catálogo\n2 - Meus pedidos\n3 - Sair"

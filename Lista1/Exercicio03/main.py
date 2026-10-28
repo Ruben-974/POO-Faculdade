@@ -1,51 +1,32 @@
 from model.ContaBancaria import ContaBancaria
 
 def principal():
+
+   
    conta1 = ContaBancaria("Gustavo", 1000)
-   conta2 = ContaBancaria("Israel", -1000)  
-
-   conta1.depositar(500)    
-   conta1.sacar(200)
-   conta1.transferir(conta2, 300)
-   conta1.exibirExtrato()
-   print(f"Saldo da conta de {conta2.gettitutlar()}: R${conta2.getsaldo():.2f}\n")
-
-
-
-   conta2.depositar(1000)
-   conta2.sacar(500)
-   conta2.transferir(conta1, 200)
-   conta2.exibirExtrato()
-
+   conta2 = ContaBancaria("Israel", 0.0)  
 
    try:
-        if conta2.sacar < conta2.getsaldo():
-            raise ValueError("O saldo da conta não pode ser negativo.")
-   except ValueError as error:
-        print(error)
+      print("informacoes da conta bancaria de Gustavo:")
+      conta1.depositar(500.0)    
+      conta1.sacar(200.0) 
+      conta1.transferir(conta2, 300.0)
+      print(f"Saldo da conta de {conta2.getTitular()}: R${conta2.getSaldo()}")
+      
+      
+      
+      print("informacoes da conta bancaria de Israel:")
+      conta2.depositar(-50)  #valor invalido
+      conta2.sacar(100)     #saldo insuficiente #ValueError
+      conta2.transferir(conta1, 50)  #transferencia invalida  # se der erro em sacar nao executa transferir
+      
+   except ValueError as erro:
+      print (erro)
 
    finally:
-       print("Execução finalizada.")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      print("Extratos:")
+      conta1.exibirExtrato()
+      conta2.exibirExtrato()
 
 
 if __name__ == '__main__':

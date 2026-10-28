@@ -4,59 +4,62 @@ class ContaBancaria:
         self.__saldo = saldo
         self.__historico = []
 
-    def settitular(self, titular):
+    def setTitular(self, titular):
         self.__titular = titular
 
-    def gettitutlar(self):
+    def getTitular(self):
         return self.__titular
 
 
 
-    def getsaldo(self):
+    def getSaldo(self):
         return self.__saldo
 
     
 
 
     def depositar(self, valor):
-        print(f"informacoes da conta bancaria de {self.__titular}:")
+       
         if valor > 0:
             self.__saldo += valor
-            print(f'Deposito de R${valor:.2f} realizado com sucesso.')
-
-            self.__historico.append(f'Deposito: R${valor:.2f}')
+            print(f'Deposito de R${valor} realizado com sucesso.')
+            self.__historico.append(f'Deposito: R${valor}')
+            return True
         else:
-            print('Valor de deposito invalido.\n')
+            print('Valor de deposito invalido.')
+            return False
+
+        
 
    
    
     def sacar(self, valor):
         if valor > 0 and valor <= self.__saldo:
             self.__saldo -= valor
-            self.__historico.append(f'Saque: R${valor:.2f}')
-            print(f'Saque de R${valor:.2f} realizado com sucesso.')
-        raise ValueError('Saldo insuficiente ou valor de saque invalido.\n')
+            self.__historico.append(f'Saque: R${valor}')
+            print(f'Saque de R${valor} realizado com sucesso.')
+            return True
 
+        raise ValueError("saldo insuficiente")
+
+       
    
    
     def transferir(self, destino,valor):
-        if valor > 0 and valor <= self.__saldo:
-            self.__saldo -= valor
-            self.__historico.append(f'Transferencia: R${valor:.2f}, Destinatario: {destino.gettitutlar()}')
+            self.sacar(valor)
             destino.depositar(valor)
-
-            print(f'Transferencia de R${valor:.2f} para {destino.gettitutlar()} realizada com sucesso.')
-
-        else:
-            print('Saldo insuficiente ou valor de transferencia invalido.')
-
+            print(f'Transferencia de R${valor} para {destino.getTitular()} realizada com sucesso.')
+            return True
     
     def exibirExtrato(self):
-        print(f'Historico de transacoes da conta de {self.__titular}: \n {self.__historico} \n Saldo atual: R${self.__saldo:.2f}\n')
+        print(f"extrato de {self.__titular}")
+        for transacoes in (self.__historico):
+            print(transacoes)
+
+        print (f"Saldo atual :{self.__saldo}")
    
    
-   
-   
+      
    
     def __str__(self):
-        return f'Titular: {self.__titular}\nSaldo: R${self.__saldo:.2f}'
+        return (f'Titular: {self.__titular}\nSaldo: R${self.__saldo}')

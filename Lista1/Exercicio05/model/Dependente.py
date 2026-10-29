@@ -1,21 +1,49 @@
-from model.Funcionario import Funcionario
+from Funcionario import Funcionario
+from datetime import datetime
 
-def __init__(self, nome, idade):
-        self.__nome = nome
-        self.__idade = idade
+class Dependente:
+    def __init__(self,nome,dataNascimento):
+        self.__nome=nome
+        self.__dataNascimento=dataNascimento
 
 
-def setnome(self, nome):
-        self.__nome = nome
-def getnome(self):
+    def setnome(self,nome):
+        self.__nome=nome
+
+    def getnome(self):
         return self.__nome
 
 
-def setidade(self,idade):
-        self.__idade = idade
-def getidade(self):
-        return self.__idade
+    def setdataNascimento(self,dataNascimento):
+        self.__dataNascimento=dataNascimento
+
+    def getdataNascimento(self):
+        return self.__dataNascimento
+
+        return True
+
+    def proximoAniversario(dataAtual):
+        return True
+       
+
+
+    def diasAniversairo(dataAtual):
+
+        return True
+
+
+    def diaSemanaAniversario(dataAtual):
+
+
+        return True
+
+
+   
 
 
 
-        
+    
+
+
+
+    

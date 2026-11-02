@@ -19,16 +19,16 @@ class Ticket:
         self.__entrada = entrada
 
     def permanencia(self, saida):
-        # Se a saída for antes da entrada, o dado é inválido
+        # se a saída for antes da entrada, o dado é inválido
         if saida < self.__entrada:
             raise ValueError("Saída anterior à entrada")
 
-        # Subtrair duas datas gera um timedelta; convertemos para minutos inteiros
+        # subtrair duas datas gera um timedelta; convertemos para minutos inteiros
         segundos = (saida - self.__entrada).total_seconds()
         return int(segundos // 60)
 
     def calcularValor(self, saida):
-        # permanencia() já valida se a saída é válida
+        # permanencia() já fica valida se a saída é válida
         minutos = self.permanencia(saida)
 
         if minutos <= 15:
@@ -36,11 +36,11 @@ class Ticket:
         elif minutos <= 60:
             valor = 8.0
         else:
-            # ceil arredonda para cima: qualquer fração de hora conta como hora cheia
+            # ceil arredonda para cima, qualquer fração de hora conta como hora cheia
             horasAdicionais = math.ceil((minutos - 60) / 60)
             valor = 8.0 + 4.0 * horasAdicionais
 
-        # Teto de R$ 40,00 para qualquer permanência
+        # teto de R$ 40,00 para qualquer permanência
         if valor > 40.0:
             valor = 40.0
 

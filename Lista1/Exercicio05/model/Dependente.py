@@ -1,4 +1,3 @@
-from Funcionario import Funcionario
 from datetime import datetime
 
 class Dependente:
@@ -18,24 +17,39 @@ class Dependente:
         self.__dataNascimento=dataNascimento
 
     def getdataNascimento(self):
-        return self.__dataNascimento
-
-        return True
-
-    def proximoAniversario(dataAtual):
-        return True
-       
+        return self.__dataNascimento.strftime("%d/%m/%Y")
 
 
-    def diasAniversairo(dataAtual):
-
-        return True
 
 
-    def diaSemanaAniversario(dataAtual):
+    def proximoAniversario(self,dataAtual):
+        proximoniver=datetime( 
+        dataAtual.year, self.__dataNascimento.month, self.__dataNascimento.day)
+        if proximoniver.date() < dataAtual.date():
+            proximoniver=datetime(dataAtual.year +1 , self.__dataNascimento.month, self.__dataNascimento.day)
+
+        return proximoniver
 
 
-        return True
+    def diasParaAniversario(self,dataAtual):
+        
+        proximoniver= self.proximoAniversario(dataAtual)
+        dias= proximoniver.date() - dataAtual.date()
+        return dias.days
+
+     
+
+
+    def diaSemanaAniversario(self,dataAtual):
+        proximoniver= self.proximoAniversario(dataAtual)
+        semana=["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado","Domingo"]
+        for i in range(len(semana)):
+            if proximoniver.weekday()==i:
+                return semana[i]
+
+
+
+
 
 
    

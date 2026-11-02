@@ -2,10 +2,11 @@ class Funcionario:
 
     def __init__(self,nome, salarioBruto, totalAcrecimo, totalDesconto): 
         self.__nome = nome
-        self.__salarioBruto = salarioBruto
+        self.__salarioBruto= 0
+        self.setSalarioBruto(salarioBruto)
         self.__totalAcrecimo = totalAcrecimo
         self.__totalDesconto = totalDesconto
-        self.__calcularSalarioLiquido = None
+       
 
     def setNome(self, nome):
         self.__nome = nome
@@ -15,7 +16,7 @@ class Funcionario:
 
     def setSalarioBruto(self, salarioBruto):
         if salarioBruto < 0:
-            ValueError("O salário bruto não pode ser negativo.")
+            raise ValueError("O salário bruto não pode ser negativo.")
         self.__salarioBruto = salarioBruto
       
     def getSalarioBruto(self):

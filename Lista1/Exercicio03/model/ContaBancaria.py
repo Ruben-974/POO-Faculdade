@@ -20,30 +20,39 @@ class ContaBancaria:
 
     def depositar(self, valor):
        
-        if valor > 0:
-            self.__saldo += valor
-        else:
-            print('Valor de deposito invalido.')
-            return False
+        if valor <= 0:
+            raise ValueError("O valor do depósito deve ser positivo.")
+       
+        self.__saldo += valor
+        self.__historico.append(f'Depósito: R${valor}')
+     
 
-        
 
    
    
     def sacar(self, valor):
-        if valor > 0 and valor <= self.__saldo:
-            self.__saldo -= valor
-            self.__historico.append(f'Saque: R${valor}')
-        raise ValueError("saldo insuficiente")
+        if valor <=0:
+            raise ValueError("O valor do saque deve ser positivo.")
+        if valor > self.__saldo:
+            raise ValueError("Saldo insuficiente.")
+        self.__saldo -= valor
+        self.__historico.append(f'Saque: R${valor}')
 
        
    
    
     def transferir(self, destino,valor):
-            self.sacar(valor)
-            destino.depositar(valor)
-            return True
-    
+        if valor <= 0:
+            raise ValueError("O valor da transferência deve ser positivo.")
+        if valor > self.__saldo:
+            raise ValueError("Saldo insuficiente para a transferência.")
+        self.__saldo -= valor
+        destino.__saldo += valor
+        self.__historico.append(f'Transferência: R${valor} para {destino.getTitular()}')
+        destino.__historico.append(f'Transferência recebida: R${valor} de {self.getTitular()}')
+        print("trasnferencia realizada com sucesso")
+
+
     def exibirExtrato(self):
         print(f"extrato de {self.__titular}")
         for transacoes in (self.__historico):

@@ -1,3 +1,9 @@
+from calendar import monthrange
+from datetime import datetime
+
+# O funcionário precisa de um cargo.
+# Pode ter zero ou mais ocorrências e dependentes.
+
 class Funcionario:
 
     def __init__(self, nome=None, cargo=None):
@@ -31,7 +37,7 @@ class Funcionario:
         return self.__ocorrencias
 
 
-    def removeOrorrencias(self, ocorrencia):
+    def removeOcorrencias(self, ocorrencia):
         self.__ocorrencias.remove(ocorrencia)
 
 
@@ -62,13 +68,15 @@ class Funcionario:
                 salarioTotal += c.getAcrescimo()
             if not c.getDesconto() is None and c.getData().month == mes and c.getData().year == ano:
                 salarioTotal -= c.getDesconto()
-        for c in self.__dependentes:
-            if ano - c.getDataNascimento().year < 18:
-                if ano - c.getDataNascimento().year == 17:
-                    if c.getDataNascimento().month <= mes:
-                        salarioTotal += 100
-                else:
-                    salarioTotal += 100
+
+        ultimoDia = monthrange(ano, mes)[1]
+        referencia = datetime(ano, mes, ultimoDia)
+
+        for dependente in self.__dependentes:
+            nascimento = dependente.getDataNascimento()
+            idade = referencia.year - nascimento.year - ((referencia.month, referencia.day)< (nascimento.month, nascimento.day))
+            if idade < 18:
+                salarioTotal += 100
         return salarioTotal
 
 

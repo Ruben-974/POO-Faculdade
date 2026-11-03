@@ -1,11 +1,11 @@
 class Funcionario:
 
-    def __init__(self,nome, salarioBruto, totalAcrecimo, totalDesconto): 
+    def __init__(self, nome, salarioBruto, totalAcrescimos, totalDescontos): 
         self.__nome = nome
         self.__salarioBruto= 0
         self.setSalarioBruto(salarioBruto)
-        self.__totalAcrecimo = totalAcrecimo
-        self.__totalDesconto = totalDesconto
+        self.__totalAcrescimos = totalAcrescimos
+        self.__totalDescontos = totalDescontos
        
 
     def setNome(self, nome):
@@ -23,23 +23,23 @@ class Funcionario:
         return self.__salarioBruto
 
 
-    def setTotalAcrecimo(self, totalAcrecimo):
-        self.__totalAcrecimo = totalAcrecimo
+    def setTotalAcrescimos(self, totalAcrescimo):
+        self.__totalAcrescimos = totalAcrescimo
 
-    def getTotalAcrecimo(self):
-        return self.__totalAcrecimo
+    def getTotalAcrescimos(self):
+        return self.__totalAcrescimos
 
-    def setTotalDesconto(self, totalDesconto):
-        self.__totalDesconto = totalDesconto
+    def setTotalDescontos(self, totalDesconto):
+        self.__totalDescontos = totalDesconto
 
-    def getTotalDesconto(self):
-        return self.__totalDesconto
+    def getTotalDescontos(self):
+        return self.__totalDescontos
 
 
     def calcularSalarioLiquido(self):
-        self.__calcularSalarioLiquido = self.__salarioBruto + self.__totalAcrecimo - self.__totalDesconto
+        self.__calcularSalarioLiquido = self.__salarioBruto + self.__totalAcrescimos - self.__totalDescontos
         return self.__calcularSalarioLiquido
 
     def __str__(self):
-        return f'NOME: {self.getNome()}\nSALARIO BRUTO: {self.getSalarioBruto()}\nTOTAL ACRECIMO: {self.getTotalAcrecimo()}\nTOTAL DESCONTO: {self.getTotalDesconto()}\nSALARIO LIQUIDO: {self.calcularSalarioLiquido()}\n'
+        return f'NOME: {self.getNome()}\nSALARIO BRUTO: {self.getSalarioBruto()}\nTOTAL ACRECIMO: {self.getTotalAcrescimos()}\nTOTAL DESCONTO: {self.getTotalDescontos()}\nSALARIO LIQUIDO: {self.calcularSalarioLiquido()}\n'
     

@@ -11,57 +11,47 @@ class ContaBancaria:
         return self.__titular
 
 
-
     def getSaldo(self):
         return self.__saldo
 
     
 
-
     def depositar(self, valor):
        
         if valor <= 0:
-            raise ValueError("O valor do depósito deve ser positivo.")
-       
+            print('Valor inválido')
+            return False
         self.__saldo += valor
-        self.__historico.append(f'Depósito: R${valor}')
-     
-
-
+        self.__historico.append(f'Depósito de R$ {valor}')
+        return True
    
    
     def sacar(self, valor):
-        if valor <=0:
-            raise ValueError("O valor do saque deve ser positivo.")
-        if valor > self.__saldo:
-            raise ValueError("Saldo insuficiente.")
+        if valor <=0 or valor > self.__saldo:
+            print('Saldo insuficiente')
+            return False
         self.__saldo -= valor
-        self.__historico.append(f'Saque: R${valor}')
+        self.__historico.append(f'Saque de R$ {valor}')
+        return True 
 
        
    
    
-    def transferir(self, destino,valor):
-        if valor <= 0:
-            raise ValueError("O valor da transferência deve ser positivo.")
-        if valor > self.__saldo:
-            raise ValueError("Saldo insuficiente para a transferência.")
-        self.__saldo -= valor
-        destino.__saldo += valor
-        self.__historico.append(f'Transferência: R${valor} para {destino.getTitular()}')
-        destino.__historico.append(f'Transferência recebida: R${valor} de {self.getTitular()}')
-        print("trasnferencia realizada com sucesso")
+    def transferir(self, destino, valor):
+        if self.sacar(valor):
+            return destino.depositar(valor)
+        return False
 
 
     def exibirExtrato(self):
-        print(f"extrato de {self.__titular}")
+        print(f"Extrato de {self.__titular}")
         for transacoes in (self.__historico):
             print(transacoes)
 
-        print (f"Saldo atual :{self.__saldo}")
+        print (f"Saldo atual: R$ {self.__saldo}")
    
    
       
    
     def __str__(self):
-        return (f'Titular: {self.__titular}\nSaldo: R${self.__saldo}')
+        return (f'Titular: {self.__titular}\nSaldo: R$ {self.__saldo}')

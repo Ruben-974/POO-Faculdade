@@ -7,9 +7,9 @@ class Moto(Veiculo):
         super().__init__(placa,valor)
 
     def calcularAluguel(self, dias):
-        valor= self.getvalor() * dias
+        valor= self.getValor() * dias
         if dias >=30:
-            return valor * 1.10
+            return round(valor * 1.10, 2)
         else:
-            return valor * 1.20
+            return round(valor * 1.20, 2)
           

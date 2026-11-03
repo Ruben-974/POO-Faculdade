@@ -1,0 +1,4 @@
+10;Câmera
+20;Tripé
+30;Projetor
+40;Microfone

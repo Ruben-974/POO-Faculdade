@@ -1,12 +1,16 @@
 from datetime import datetime
+from pathlib import Path
 from model.Locadora import Locadora
 
 
 def principal():
+    pasta = Path(__file__).resolve().parent
     hoje = datetime.strptime('21/10/2026', '%d/%m/%Y')
 
     locadora = Locadora()
-    locadora.carregarArquivos("clientes.txt", "equipamentos.txt", "locacoes.txt")
+    locadora.carregarArquivos(
+        pasta / "clientes.txt", pasta / "equipamentos.txt", pasta / "locacoes.txt"
+    )
 
     locadora.listarLocacoes(1, hoje)
     locadora.listarLocacoes(2, hoje)

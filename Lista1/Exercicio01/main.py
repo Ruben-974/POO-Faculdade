@@ -1,17 +1,16 @@
 from model.Funcionario import Funcionario
 
 def principal():
-    funcionario1 = Funcionario("Gustavo", 2000, 500, 300)
-    print(funcionario1)
-
     
-
-    try:
-      funcionario2 = Funcionario("Israel", -1000, 500, 300)
-      print(funcionario2)
-       
-    except ValueError as error: 
-        print(error)
+    f = Funcionario("Ana", 3000.0, 500.0, 200.0)
+    print(f.calcularSalarioLiquido())
+    f.setSalarioBruto(3500.0)
+    print(f.calcularSalarioLiquido())
+    
+    f2 = Funcionario("Pedro", 2000.0, 30.0, 100.0)
+    print(f2.calcularSalarioLiquido())
+    f2.setSalarioBruto(3100.0)
+    print(f2.calcularSalarioLiquido())
 
 if __name__ == "__main__":
     principal()

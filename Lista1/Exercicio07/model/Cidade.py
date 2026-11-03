@@ -2,7 +2,7 @@ class Cidade:
     def __init__(self, nome, estado):
         self.__nome = nome
         self.__estado = estado   #obrigatorio
-    def setnome(self, nome):
+    def setNome(self, nome):
         self.__nome = nome
     def getNome(self):
         return self.__nome

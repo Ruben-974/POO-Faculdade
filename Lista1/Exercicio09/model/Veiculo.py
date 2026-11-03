@@ -8,49 +8,50 @@ class Veiculo(abc.ABC):
         self.__alugado=False
         self.__historico=[]
 
-    def setplaca(self, placa):
+    def setPlaca(self, placa):
         self.__placa = placa
 
-    def getplaca(self):
+    def getPlaca(self):
         return self.__placa
 
-    def setvalor(self, valor):
+    def setValor(self, valor):
         self.__valor = valor
 
-    def getvalor(self):
+    def getValor(self):
         return self.__valor
 
-    def setalugado(self, alugado):
+    def setAlugado(self, alugado):
         self.__alugado = alugado
 
-    def getalugado(self):
+    def getAlugado(self):
         return self.__alugado
 
-    def sethistorico(self, historico):
+    def setHistorico(self, historico):
         self.__historico = historico
 
-    def gethistorico(self):
+    def getHistorico(self):
         return self.__historico
 
     def alugar(self, cliente, dias):
            if self.__alugado:
-               print(f"veículo de placa{self.__placa} não disponível para aluguel.")
+               print(f"Veículo de placa {self.__placa} não disponível para aluguel")
                return False
            
            valor = self.calcularAluguel(dias)
            self.__alugado = True
            self.__historico.append(("alugado", cliente, valor))
-           print(f"Aluguel confirmado para o veiculo de placa {self.__placa}")
+           print(f"Aluguel confirmado para o veículo de placa {self.__placa}")
+           return True
 
 
     def devolver(self):
         if not self.__alugado:
-            print(f"veículo {self.__placa} não está alugado.")
+            print(f"Veículo de placa {self.__placa} não estava alugado")
             return False
 
         self.__alugado = False
         self.__historico.append(("devolvido",None, None))   #regirtro de devolução no histórico
-        print(f"Devolução realizada para o veículo de placa {self.__placa}.")       
+        print(f"Devolução realizada para o veículo de placa {self.__placa}")
         return True
 
     def listarHistorico(self):
@@ -60,7 +61,12 @@ class Veiculo(abc.ABC):
             if tipo == "alugado":
                 print(
                     f"Veículo placa {self.__placa} alugado pelo cliente "
-                    f"{cliente.getnome()} no valor de R$ {valor}"
+                    f"{cliente.getNome()} no valor de R$ {valor}"
                 )
             else:
                 print(f"Veículo placa {self.__placa} devolvido")
+
+
+    @abc.abstractmethod
+    def calcularAluguel(self, dias):
+        pass

@@ -6,19 +6,21 @@ class Funcionario:
         self.__nome=nome
         self.__dependentes=[]
 
-    def setnome(self,nome):
+    def setNome(self,nome):
         self.__nome=nome
-    def getnome(self):
+
+        
+    def getNome(self):
         return self.__nome
 
-    def adddependentes(self, dependente):
+    def addDependentes(self, dependente):
         self.__dependentes.append(dependente)
         return True
 
     def listarDependentes(self,dataAtual):
         print(f"Dependentes de {self.__nome}")
         for dep in (self.__dependentes):
-            print(f'NOME: {dep.getnome()} | Nascimento:{dep.getdataNascimento()} | Próximo aniversário: {dep.proximoAniversario(dataAtual).strftime("%d/%m/%Y")} | Dias restantes: {dep.diasParaAniversario(dataAtual)} | Dia da semana: {dep.diaSemanaAniversario(dataAtual)}')
+            print(f'{dep.getNome()} | nascimento: {dep.getDataNascimento()} | próximo aniversário: {dep.proximoAniversario(dataAtual).strftime("%d/%m/%Y")} | faltam {dep.diasParaAniversario(dataAtual)} dias | {dep.diaSemanaAniversario(dataAtual)}')
         
         
         

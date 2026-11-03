@@ -6,17 +6,17 @@ class Dependente:
         self.__dataNascimento=dataNascimento
 
 
-    def setnome(self,nome):
+    def setNome(self,nome):
         self.__nome=nome
 
-    def getnome(self):
+    def getNome(self):
         return self.__nome
 
 
-    def setdataNascimento(self,dataNascimento):
+    def setDataNascimento(self,dataNascimento):
         self.__dataNascimento=dataNascimento
 
-    def getdataNascimento(self):
+    def getDataNascimento(self):
         return self.__dataNascimento.strftime("%d/%m/%Y")
 
 

@@ -3,10 +3,10 @@ class Cliente:
         self.__nome = nome
 
 
-    def setnome(self, nome):
+    def setNome(self, nome):
         self.__nome = nome
 
-    def getnome(self):
+    def getNome(self):
         return self.__nome
 
     

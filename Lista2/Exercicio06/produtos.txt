@@ -1,0 +1,5 @@
+1;Caneta;2.50;100
+2;Caderno;18.90;40
+3;Mochila;texto;10
+4;Lapis;1.20
+5;Borracha;1.00;50

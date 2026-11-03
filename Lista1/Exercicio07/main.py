@@ -14,7 +14,7 @@ def principal():
     mg = Estado("Minas Gerais", br) #estado exige um pais
     jf = Cidade("Juiz de Fora", mg) #cidade exige um estado
     ana = Pessoa("Ana", jf)
-    ana.setescolaridade(Escolaridade("Superior completo"))
+    ana.setEscolaridade(Escolaridade("Superior completo"))
     bruno = Pessoa("Bruno")
     print(ana.paisNascimento())
     print(ana.estadoNascimento())

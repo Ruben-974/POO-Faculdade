@@ -6,11 +6,11 @@ class Carro(Veiculo):
         super().__init__(placa,valor)
         self.__modelo=modelo
 
-    def setmodelo(self, modelo):
+    def setModelo(self, modelo):
         self.__modelo = modelo
 
-    def getmodelo(self):
+    def getModelo(self):
         return self.__modelo
     
     def calcularAluguel(self, dias):
-        return self.getvalor() * dias   
+        return self.getValor() * dias   

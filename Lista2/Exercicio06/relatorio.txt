@@ -1,0 +1,5 @@
+RELATORIO DE ESTOQUE
+1 - Caneta: 100 x R$ 2.50 = R$ 250.00
+2 - Caderno: 40 x R$ 18.90 = R$ 756.00
+5 - Borracha: 50 x R$ 1.00 = R$ 50.00
+TOTAL: R$ 1056.00

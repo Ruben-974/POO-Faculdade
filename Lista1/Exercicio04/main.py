@@ -7,9 +7,7 @@ def principal():
     p.vender(10)
     p.comprar(150)
     p.comprar(100)
-
-    print(p,'\n')
-    p.exibirHistorico()
+    print(p.getQtdeEstoque())
 
 if __name__ == '__main__':
     principal()

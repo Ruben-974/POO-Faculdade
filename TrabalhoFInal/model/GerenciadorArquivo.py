@@ -1,5 +1,5 @@
 from model.Biblioteca import Biblioteca
-from model.Cliente import CLiente   
+from model.Cliente import Cliente   
 from pathlib import path
 class GerenciadorArquivo:
     def __init__(self):

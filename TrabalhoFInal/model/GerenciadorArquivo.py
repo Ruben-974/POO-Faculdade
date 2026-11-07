@@ -45,3 +45,24 @@ class GerenciadorArquivo:
 
         return None
 
+    def carregarRenovacoes(self,emprestimos):
+
+
+    def autenticar(self,usuarios,login,senha):
+        trajetoaut= self._pastaBase 
+
+
+
+
+    def salvarRenovacoes(self,emprestimos):
+        trajetoemp= self.__pastaBase / 'emprestimo.txt'
+        try:
+            with open(trajetoemp, 'w') as file_object:
+                for emprestimo in emprestimos:
+                    file_object.write(f"{emprestimo}\n")
+        except FileNotFoundError as error:
+            print(error)
+        finally:
+            print("terminei de salvar o arquivo")
+
+

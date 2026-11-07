@@ -1,3 +1,6 @@
+from model.Livro import Livro
+from model.Emprestimo import Emprestimo
+
 def principal():
     usuarios = [
     ['U001', 'João Pedro', 'cliente', 'joao', '1234'],
@@ -6,18 +9,18 @@ def principal():
     ]
 
     livros = [
-    ['L001', 'Dom Casmurro', 'Machado de Assis'],
-    ['L002', 'O Cortiço', 'Aluísio Azevedo'],
-    ['L003', 'Vidas Secas', 'Graciliano Ramos'],
-    ['L004', 'A Hora da Estrela', 'Clarice Lispector'],
-    ['L005', 'Capitães da Areia', 'Jorge Amado']
+    Livro('L001', 'Dom Casmurro', 'Machado de Assis'),
+    Livro('L002', 'O Cortiço', 'Aluísio Azevedo'),
+    Livro('L003', 'Vidas Secas', 'Graciliano Ramos'),
+    Livro('L004', 'A Hora da Estrela', 'Clarice Lispector'),
+    Livro('L005', 'Capitães da Areia', 'Jorge Amado')
     ]
 
     emprestimos = [
-    ['E001', 'U001', ['L001', 'L002'], '01/11/2026'],
-    ['E002', 'U002', ['L003'], '02/11/2026'],
-    ['E003', 'U001', ['L004'], '03/11/2026'],
-    ['E004', 'U002', ['L001', 'L003', 'L005'], '04/11/2026']
+    Emprestimo('E001', 'U001', ['L001', 'L002'], '01/11/2026'),
+    Emprestimo('E002', 'U002', ['L003'], '02/11/2026'),
+    Emprestimo('E003', 'U001', ['L004'], '03/11/2026'),
+    Emprestimo('E004', 'U002', ['L001', 'L003', 'L005'], '04/11/2026')
     ]
 
     loginInvalido = True
@@ -75,7 +78,7 @@ def principal():
                     print('Sem livros disponiveis no momento.')
                 else:
                     for l in livros:
-                        print(f'ID: {l[0]} - Nome: {l[1]} - Autor: {l[2]}')
+                        print(l)
 
 
             elif opcao == '3':
@@ -110,7 +113,7 @@ def principal():
                     print('Sem livros disponiveis no momento.')
                 else:
                     for l in livros:
-                        print(f'ID: {l[0]} - Nome: {l[1]} - Autor: {l[2]}')
+                        print(l)
 
             elif opcao == '3':
                 ...

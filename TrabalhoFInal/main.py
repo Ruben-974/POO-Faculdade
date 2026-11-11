@@ -32,6 +32,7 @@ def exibirEmprestimos(emprestimos, titulo, mensagem):
 def exibirSobre():
     print('\n================================================================')
     print('  PRISMA | Ideias em Solução')
+    print('  Sistema: Índices')
     print('----------------------------------------------------------------')
     print('  HISTÓRIA DA EMPRESA')
 
@@ -58,6 +59,42 @@ def exibirSobre():
         '\n  a qualidade do desenvolvimento de software.\n'
     )
 
+    print('\n  EQUIPE PRISMA')
+    print('----------------------------------------------------------------')
+
+    print(
+        '\n  Rúben Israel\n'
+        '  Cargo: Líder Técnico\n'
+        '  Responsabilidades: coordenação da equipe, planejamento,\n'
+        '  integração dos módulos e desenvolvimento da interface\n'
+        '  do sistema.\n'
+    )
+
+    print(
+        '  Gustavo Henrique\n'
+        '  Cargo: Engenheiro de Software\n'
+        '  Responsabilidades: gerenciamento dos arquivos de dados,\n'
+        '  tratamento de exceções, testes e validação\n'
+        '  das funcionalidades.\n'
+        
+    )
+
+    print(
+        '  Gustavo Ramos\n'
+        '  Cargo: Analista de Sistemas e Desenvolvedor\n'
+        '  Responsabilidades: modelagem das classes de livros e\n'
+        '  empréstimos, implementação das regras de renovação\n'
+        '  e cálculo de multas.\n'
+    )
+
+    print(
+        '  Gabriel Valverde\n'
+        '  Cargo: Desenvolvedor e Analista de Qualidade (QA)\n'
+        '  Responsabilidades: desenvolvimento das classes de usuários,\n'
+        '  autenticação e aplicação dos conceitos de orientação\n'
+        '  a objetos.\n'
+    )
+
     print('================================================================\n')
 
 def principal():
@@ -82,7 +119,8 @@ def principal():
     loginInvalido = True
 
     print('\n================================================================')
-    print('  SISTEMA DE BIBLIOTECA')
+    print('  Índices | PRISMA')
+    print('  Ideias em Solução')
     print('----------------------------------------------------------------')
     print('  ACESSO AO SISTEMA\n')
 

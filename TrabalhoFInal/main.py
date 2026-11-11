@@ -1,5 +1,43 @@
 from model.Biblioteca import Biblioteca
 from model.GerenciadorArquivo_copy import GerenciadorDeArquivos
+from datetime import datetime
+from textwrap import fill
+
+
+def exibirSobre():
+    print('\n================================================================')
+    print('  PRISMA | Ideias em Solução')
+    print('----------------------------------------------------------------')
+    print('  HISTÓRIA DA EMPRESA\n')
+
+    paragrafos = (
+        'Inspirada no fenômeno óptico da refração da luz, a PRISMA apresenta '
+        'uma interpretação invertida desse processo: em vez de um único '
+        'feixe de luz se decompor em diversas cores, diferentes feixes '
+        'coloridos convergem para formar uma única luz. Essa representação '
+        'simboliza a união de ideias, conhecimentos e habilidades que, por '
+        'meio da colaboração e da tecnologia, se transformam em soluções '
+        'inovadoras, traduzindo visualmente o lema da empresa: '
+        '“Ideias em Solução”.',
+
+        'Com o propósito de transformar desafios cotidianos em ferramentas '
+        'digitais acessíveis, eficientes e intuitivas, a PRISMA dedica-se ao '
+        'desenvolvimento de soluções tecnológicas que simplifiquem processos '
+        'e atendam às necessidades de seus usuários.',
+
+        'Fundada em 2026, em Juiz de Fora, Minas Gerais, a PRISMA nasceu da '
+        'iniciativa de quatro estudantes de Engenharia de Software: '
+        'Rúben Israel, Gustavo Henrique, Gustavo Ramos e Gabriel Valverde. '
+        'A união de suas habilidades e perspectivas deu origem a uma startup '
+        'fundamentada na colaboração, na criatividade e no compromisso com '
+        'a qualidade do desenvolvimento de software.'
+    )
+
+    for paragrafo in paragrafos:
+        print(fill(paragrafo, width=64, initial_indent='  ', subsequent_indent='  '))
+        print()
+
+    print('================================================================\n')
 
 def principal():
 
@@ -83,9 +121,34 @@ def principal():
 
 
             elif opcao == '3':
-                ...
+
+                codigo = input('\n  Código do empréstimo: ')
+                emprestimo = biblioteca.buscarEmprestimo(codigo)
+
+                if emprestimo is None: 
+                    print('\n  [!] Empréstimo não encontrado.\n')
+
+                elif emprestimo.getCliente().getCodigo() != usuario.getCodigo():
+                    print('\n  [!] Este empréstimo não pertence a você.\n')
+
+                else:
+                    dataAtual = datetime.now()
+
+                    if emprestimo.renovar(dataAtual):
+
+                        novaData = emprestimo.getDataDevolucao().strftime('%d/%m/%Y')
+                        print('\n  Empréstimo renovado com sucesso!')
+                        print(f'  Nova data de devolução: {novaData}\n')
+                        gerenciador.salvarEmprestimos(emprestimos)
+
+                    else:
+                        print('\n  [!] Não foi possível renovar: '
+                            'empréstimo atrasado ou limite de renovações atingido.\n')
+
+
+                
             elif opcao == '4':
-                ...
+                exibirSobre()
             elif opcao == '5':
                 logado = False
             else:
@@ -128,7 +191,9 @@ def principal():
 
 
             elif opcao == '3':
-                ...
+
+                exibirSobre()
+                
             elif opcao == '4':
                 logado = False
             else:

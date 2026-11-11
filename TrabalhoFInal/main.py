@@ -1,41 +1,36 @@
 from model.Biblioteca import Biblioteca
-from model.GerenciadorArquivo_copy import GerenciadorDeArquivos
+from model.GerenciadorDeArquivos import GerenciadorDeArquivos
 from datetime import datetime
-from textwrap import fill
 
 
 def exibirSobre():
     print('\n================================================================')
     print('  PRISMA | Ideias em Solução')
     print('----------------------------------------------------------------')
-    print('  HISTÓRIA DA EMPRESA\n')
+    print('  HISTÓRIA DA EMPRESA')
 
-    paragrafos = (
-        'Inspirada no fenômeno óptico da refração da luz, a PRISMA apresenta '
-        'uma interpretação invertida desse processo: em vez de um único '
-        'feixe de luz se decompor em diversas cores, diferentes feixes '
-        'coloridos convergem para formar uma única luz. Essa representação '
-        'simboliza a união de ideias, conhecimentos e habilidades que, por '
-        'meio da colaboração e da tecnologia, se transformam em soluções '
-        'inovadoras, traduzindo visualmente o lema da empresa: '
-        '“Ideias em Solução”.',
+    print(
+        '\n  Inspirada no fenômeno óptico da refração da luz, a PRISMA apresenta '
+        '\n  uma interpretação invertida desse processo: em vez de um único '
+        '\n  feixe de luz se decompor em diversas cores, diferentes feixes '
+        '\n  coloridos convergem para formar uma única luz. Essa representação '
+        '\n  simboliza a união de ideias, conhecimentos e habilidades que, por '
+        '\n  meio da colaboração e da tecnologia, se transformam em soluções '
+        '\n  inovadoras, traduzindo visualmente o lema da empresa: '
+        '\n  “Ideias em Solução”.\n',
 
-        'Com o propósito de transformar desafios cotidianos em ferramentas '
-        'digitais acessíveis, eficientes e intuitivas, a PRISMA dedica-se ao '
-        'desenvolvimento de soluções tecnológicas que simplifiquem processos '
-        'e atendam às necessidades de seus usuários.',
+        '\n  Com o propósito de transformar desafios cotidianos em ferramentas '
+        '\n  digitais acessíveis, eficientes e intuitivas, a PRISMA dedica-se ao '
+        '\n  desenvolvimento de soluções tecnológicas que simplifiquem processos '
+        '\n  e atendam às necessidades de seus usuários.\n',
 
-        'Fundada em 2026, em Juiz de Fora, Minas Gerais, a PRISMA nasceu da '
-        'iniciativa de quatro estudantes de Engenharia de Software: '
-        'Rúben Israel, Gustavo Henrique, Gustavo Ramos e Gabriel Valverde. '
-        'A união de suas habilidades e perspectivas deu origem a uma startup '
-        'fundamentada na colaboração, na criatividade e no compromisso com '
-        'a qualidade do desenvolvimento de software.'
+        '\n  Fundada em 2026, em Juiz de Fora, Minas Gerais, a PRISMA nasceu da '
+        '\n  iniciativa de quatro estudantes de Engenharia de Software: '
+        '\n  Rúben Israel, Gustavo Henrique, Gustavo Ramos e Gabriel Valverde. '
+        '\n  A união de suas habilidades e perspectivas deu origem a uma startup '
+        '\n  fundamentada na colaboração, na criatividade e no compromisso com '
+        '\n  a qualidade do desenvolvimento de software.\n'
     )
-
-    for paragrafo in paragrafos:
-        print(fill(paragrafo, width=64, initial_indent='  ', subsequent_indent='  '))
-        print()
 
     print('================================================================\n')
 
@@ -43,11 +38,20 @@ def principal():
 
     gerenciador = GerenciadorDeArquivos()
 
-    usuarios = gerenciador.carregarUsuarios()
-    livros = gerenciador.carregarLivros()
-    emprestimos = gerenciador.carregarEmprestimos(usuarios, livros)
+    try: 
 
-    biblioteca = Biblioteca(usuarios, livros, emprestimos)
+        usuarios = gerenciador.carregarUsuarios()
+        livros = gerenciador.carregarLivros()
+        emprestimos = gerenciador.carregarEmprestimos(usuarios, livros)
+        biblioteca = Biblioteca(usuarios, livros, emprestimos)
+
+    except FileNotFoundError:
+        return
+
+    except ValueError as erro:
+
+        print(f'\n  [!] Dados inválidos: {erro}\n')
+        return
 
     loginInvalido = True
 
@@ -133,13 +137,20 @@ def principal():
 
                 else:
                     dataAtual = datetime.now()
+                    renovacoesAnteriores = emprestimo.getRenovacoes()
 
                     if emprestimo.renovar(dataAtual):
 
-                        novaData = emprestimo.getDataDevolucao().strftime('%d/%m/%Y')
-                        print('\n  Empréstimo renovado com sucesso!')
-                        print(f'  Nova data de devolução: {novaData}\n')
-                        gerenciador.salvarEmprestimos(emprestimos)
+                        try:
+                            gerenciador.salvarEmprestimos(emprestimos)
+                        except OSError:
+                            emprestimo.setRenovacoes(renovacoesAnteriores)
+                            print('\n  [!] Renovação não confirmada: não foi possível salvar os dados. Tente novamente.\n')
+                        else:
+                            novaData = emprestimo.getDataDevolucao().strftime('%d/%m/%Y')
+                            print('\n  Empréstimo renovado com sucesso!')
+                            print(f'  Nova data de devolução: {novaData}\n')
+
 
                     else:
                         print('\n  [!] Não foi possível renovar: '
@@ -193,7 +204,7 @@ def principal():
             elif opcao == '3':
 
                 exibirSobre()
-                
+
             elif opcao == '4':
                 logado = False
             else:

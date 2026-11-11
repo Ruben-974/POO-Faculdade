@@ -4,6 +4,7 @@ PRAZO_DIAS = 14
 MULTA_POR_DIA = 1.50
 MIN_LIVROS = 1
 MAX_LIVROS = 3
+MAX_RENOVACOES = 2
 
 
 class Emprestimo:
@@ -13,8 +14,8 @@ class Emprestimo:
         self.__dataEmprestimo = datetime.strptime(dataEmprestimo, '%d/%m/%Y')
         self.__livros = []
         self.setRenovacoes(renovacoes)
-        if livros is None or len(livros) < 1 or len(livros) > 3:
-            raise ValueError('Você deve solicitar de 1 a 3 livros.')
+        if livros is None or len(livros) < MIN_LIVROS or len(livros) > MAX_LIVROS:
+            raise ValueError(f'Você deve solicitar de {MIN_LIVROS} a {MAX_LIVROS} livros.')
         for l in livros:
             self.addLivro(l)
 
@@ -50,29 +51,29 @@ class Emprestimo:
         return self.__renovacoes
 
     def setRenovacoes(self, qtd):
-        if qtd < 0 or qtd > 2:
-            raise ValueError("Renovações deve ser de 0 a 2")
+        if qtd < 0 or qtd > MAX_RENOVACOES:
+            raise ValueError(f"Renovações deve ser de 0 a {MAX_RENOVACOES}")
         self.__renovacoes = qtd
 
     def addLivro(self, livro):
         if len(self.__livros) >= MAX_LIVROS:
-            raise ValueError("Empréstimo aceita no máximo 3 livros")
+            raise ValueError(f"Empréstimo aceita no máximo {MAX_LIVROS} livros")
         for l in self.__livros:
             if l.getCodigo() == livro.getCodigo():
                 raise ValueError("Livro repetido no empréstimo")
         self.__livros.append(livro)
 
     def estaAtrasado(self, dataAtual):
-        return dataAtual > self.getDataDevolucao()
+        return dataAtual.date() > self.getDataDevolucao().date()
 
     def calcularMulta(self, dataAtual):
-        dias = (dataAtual - self.getDataDevolucao()).days
+        dias = (dataAtual.date() - self.getDataDevolucao().date()).days
         if dias < 0:
             dias = 0
         return round(dias * MULTA_POR_DIA * len(self.__livros), 2)
 
     def renovar(self, dataAtual):
-        if self.estaAtrasado(dataAtual) or self.__renovacoes >= 2:
+        if self.estaAtrasado(dataAtual) or self.__renovacoes >= MAX_RENOVACOES:
             return False
         self.__renovacoes += 1
         return True

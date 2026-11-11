@@ -2,6 +2,32 @@ from model.Biblioteca import Biblioteca
 from model.GerenciadorDeArquivos import GerenciadorDeArquivos
 from datetime import datetime
 
+def exibirLivros(biblioteca):
+
+    print('\n================================================================')
+    print('  ACERVO DA BIBLIOTECA')
+    print('================================================================')
+
+    acervo = biblioteca.listarLivros()
+
+    if len(acervo) == 0:
+        print('\n  Nenhum livro disponível no momento.\n')
+    else:
+        for l in acervo:
+            print(l)
+
+def exibirEmprestimos(emprestimos, titulo, mensagem):
+    print('\n================================================================')
+    print(f'  {titulo}')
+    print('================================================================')
+
+    if len(emprestimos) == 0:
+
+        print(f'\n  {mensagem}\n')
+
+    else:
+        for e in emprestimos:
+            print(e)
 
 def exibirSobre():
     print('\n================================================================')
@@ -95,33 +121,14 @@ def principal():
             opcao = input('  Escolha uma opção: ')
 
             if opcao == '1':
-                print('\n================================================================')
-                print('  MEUS EMPRÉSTIMOS')
-                print('================================================================')
 
                 emprestimoCliente = biblioteca.listarEmprestimosCliente(usuario)
-
-                if len(emprestimoCliente) == 0:
-
-                    print('\n  Você não possui empréstimos registrados.\n')
-
-                else:
-                    for e in emprestimoCliente:
-                        print(e)
+                exibirEmprestimos(emprestimoCliente, 'MEUS EMPRÉSTIMOS', 'Você não possui empréstimos registrados.')
 
 
             elif opcao == '2':
-                print('\n================================================================')
-                print('  ACERVO DA BIBLIOTECA')
-                print('================================================================')
 
-                acervo = biblioteca.listarLivros()
-
-                if len(acervo) == 0:
-                    print('\n  Nenhum livro disponível no momento.\n')
-                else:
-                    for l in acervo:
-                        print(l)
+                exibirLivros(biblioteca)
 
 
             elif opcao == '3':
@@ -159,10 +166,15 @@ def principal():
 
                 
             elif opcao == '4':
+
                 exibirSobre()
+
             elif opcao == '5':
+
                 logado = False
+
             else:
+
                 print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
 
     elif usuario.getTipo() == 'bibliotecario':
@@ -173,41 +185,25 @@ def principal():
 
             opcao = input('  Escolha uma opção: ')
             if opcao == '1':
-                print('\n================================================================')
-                print('  EMPRÉSTIMOS DA BIBLIOTECA')
-                print('================================================================')
 
                 emprestimosBiblioteca = biblioteca.listarEmprestimos()
 
-                if len(emprestimosBiblioteca) == 0:
-                    print('\n  Nenhum empréstimo registrado no momento.\n')
-
-                for e in emprestimosBiblioteca:
-                    
-                    print(e)
+                exibirEmprestimos(emprestimosBiblioteca, 'EMPRÉSTIMOS DA BIBLIOTECA', 'Nenhum empréstimo registrado no momento.')
 
             elif opcao == '2':
 
-                print('\n================================================================')
-                print('  ACERVO DA BIBLIOTECA')
-                print('================================================================')
-
-                acervo = biblioteca.listarLivros()
-
-                if len(acervo) == 0:
-                    print('\n  Nenhum livro disponível no momento.\n')
-                else:
-                    for l in acervo:
-                        print(l)
-
+                exibirLivros(biblioteca)
 
             elif opcao == '3':
 
                 exibirSobre()
 
             elif opcao == '4':
+
                 logado = False
+
             else:
+
                 print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
 
 

@@ -192,7 +192,3 @@ class GerenciadorDeArquivos:
     def __str__(self):
         return "GerenciadorDeArquivos"
 
-                
-
-    
-

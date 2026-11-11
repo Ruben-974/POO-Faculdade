@@ -6,4 +6,16 @@ class Cliente(Usuario):
         super().__init__(codigo, nome, 'cliente', login, senha)
 
     def menu(self):
-        return '\n----------- Menu Cliente -----------\n1 - Visualizar Empréstimos\n2 - Visualizar Livros\n3 - Renovar Empréstimo\n4 - Sobre\n5 - Sair'
+        return (
+            '\n================================================================\n'
+            '  MENU DO CLIENTE\n'
+            '----------------------------------------------------------------\n'
+            '\n'
+            '  1 - Visualizar Empréstimos\n'
+            '  2 - Visualizar Livros\n'
+            '  3 - Renovar Empréstimo\n'
+            '  4 - Sobre\n'
+            '  5 - Sair\n'
+            '\n'
+            '================================================================'
+        )

@@ -56,3 +56,9 @@ class Biblioteca:
             if e.getCliente().getCodigo() == cliente.getCodigo():
                 emprestimos.append(e)
         return emprestimos
+
+    def __str__(self):
+        usuarios = ', '.join(str(usuario) for usuario in self.__usuarios)
+        livros = ', '.join(str(livro) for livro in self.__livros)
+        emprestimos = ', '.join(str(emprestimo) for emprestimo in self.__emprestimos)
+        return f"USUARIOS: [{usuarios}] - LIVROS: [{livros}] - EMPRESTIMOS: [{emprestimos}]"

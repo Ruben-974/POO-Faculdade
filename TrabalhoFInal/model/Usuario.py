@@ -43,4 +43,4 @@ class Usuario(ABC):
         pass
 
     def __str__(self):
-        return f'CODIGO: {self.getCodigo()} - NOME: {self.getNome()} - TIPO: {self.getTipo()}'
+        return f'CODIGO: {self.__codigo} - NOME: {self.__nome}'

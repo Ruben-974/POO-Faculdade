@@ -1,0 +1,4 @@
+U001;João Pedro;cliente;joao;1234
+U002;Maria Souza;cliente;maria;5678
+U003;Carlos Lima;bibliotecario;carlos;abcd
+U004;Israel;bibliotecario;israel;319

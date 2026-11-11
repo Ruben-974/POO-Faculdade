@@ -23,4 +23,9 @@ class Livro:
         self.__autor = autor
 
     def __str__(self):
-        return f"{self.__codigo} - {self.__titulo} - {self.__autor}"
+        return (
+            f'\n  Código : {self.__codigo}\n'
+            f'  Título : {self.__titulo}\n'
+            f'  Autor  : {self.__autor}\n'
+            '  ------------------------------------------------------------'
+        )

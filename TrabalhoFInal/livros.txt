@@ -1,0 +1,5 @@
+L001;Dom Casmurro;Machado de Assis
+L002;O Cortiço;Aluísio Azevedo
+L003;Vidas Secas;Graciliano Ramos
+L004;A Hora da Estrela;Clarice Lispector
+L005;Capitães da Areia;Jorge Amado

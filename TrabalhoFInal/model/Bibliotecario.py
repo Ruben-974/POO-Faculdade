@@ -6,4 +6,15 @@ class Bibliotecario(Usuario):
         super().__init__(codigo, nome, 'bibliotecario', login, senha)
 
     def menu(self):
-        return '----------- Menu Bibliotecario -----------\n1 - Visualizar Empréstimos\n2 - Visualizar Livros\n3 - Sobre\n4 - Sair'
+        return (
+            '\n================================================================\n'
+            '  MENU DO BIBLIOTECÁRIO\n'
+            '----------------------------------------------------------------\n'
+            '\n'
+            '  1 - Visualizar Empréstimos\n'
+            '  2 - Visualizar Livros\n'
+            '  3 - Sobre\n'
+            '  4 - Sair\n'
+            '\n'
+            '================================================================'
+        )

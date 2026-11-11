@@ -1,83 +1,84 @@
-from model.Livro import Livro
-from model.Emprestimo import Emprestimo
+from model.Biblioteca import Biblioteca
+from model.GerenciadorArquivo_copy import GerenciadorDeArquivos
 
 def principal():
-    usuarios = [
-    ['U001', 'João Pedro', 'cliente', 'joao', '1234'],
-    ['U002', 'Maria Souza', 'cliente', 'maria', '5678'],
-    ['U003', 'Carlos Lima', 'bibliotecario', 'carlos', 'abcd']
-    ]
 
-    livros = [
-    Livro('L001', 'Dom Casmurro', 'Machado de Assis'),
-    Livro('L002', 'O Cortiço', 'Aluísio Azevedo'),
-    Livro('L003', 'Vidas Secas', 'Graciliano Ramos'),
-    Livro('L004', 'A Hora da Estrela', 'Clarice Lispector'),
-    Livro('L005', 'Capitães da Areia', 'Jorge Amado')
-    ]
+    gerenciador = GerenciadorDeArquivos()
 
-    emprestimos = [
-    Emprestimo('E001', 'U001', ['L001', 'L002'], '01/11/2026'),
-    Emprestimo('E002', 'U002', ['L003'], '02/11/2026'),
-    Emprestimo('E003', 'U001', ['L004'], '03/11/2026'),
-    Emprestimo('E004', 'U002', ['L001', 'L003', 'L005'], '04/11/2026')
-    ]
+    usuarios = gerenciador.carregarUsuarios()
+    livros = gerenciador.carregarLivros()
+    emprestimos = gerenciador.carregarEmprestimos(usuarios, livros)
+
+    biblioteca = Biblioteca(usuarios, livros, emprestimos)
 
     loginInvalido = True
 
+    print('\n================================================================')
+    print('  SISTEMA DE BIBLIOTECA')
+    print('----------------------------------------------------------------')
+    print('  ACESSO AO SISTEMA\n')
+
     while loginInvalido:
-        inputLogin = input('Digite seu login: ')
 
-        for l in usuarios:
-            if l[3] == inputLogin:
+        inputLogin = input('  Login: ')
 
-                loginInvalido = False
-                senhaInvalida = True
-                
-                while senhaInvalida:
-                    inputSenha = input('Digite sua Senha: ')
-                    if inputSenha != l[4]:
-                        print('Senha invalida!')
-                    else:
-                        senhaInvalida = False
-                        usuarioLogado = l
+        usuario = biblioteca.buscarUsuario(inputLogin)
 
-                
+        if not usuario is None:
+
+            loginInvalido = False
+            senhaInvalida = True
+            
+            while senhaInvalida:
+                inputSenha = input('  Senha: ')
+                if inputSenha != usuario.getSenha():
+                    print('\n  [!] Senha inválida. Tente novamente.\n')
+                else:
+                    senhaInvalida = False
+      
         if loginInvalido:
-            print('Login invalido!')
+            print('\n  [!] Login inválido. Tente novamente.\n')
 
-    print('Logado com sucesso!')
+    print('\n  Login realizado com sucesso!')
+    print('================================================================')
 
-    ficarLogado = True
+    logado = True
 
-    if usuarioLogado[2] == 'cliente':
+    if usuario.getTipo() == 'cliente':
 
-        while ficarLogado:
+        while logado:
 
-            print('\n----------- Menu Cliente -----------\n1 - Visualizar Empréstimos\n2 - Visualizar Livros\n3 - Renovar Empréstimo\n4 - Sobre\n5 - Sair')
+            print(usuario.menu())
 
-            opcao = input('Sua opção: ')
+            opcao = input('  Escolha uma opção: ')
+
             if opcao == '1':
-                contemEmprestimo = False
-                for e in emprestimos:
-                    
-                    if e[1] == usuarioLogado[0]:
-                        contemEmprestimo = True
-                        print(f'Emprestimo: {e[0]} - Livros: {e[2]} - Data Emprestimo: {e[3]}')
+                print('\n================================================================')
+                print('  MEUS EMPRÉSTIMOS')
+                print('================================================================')
 
-                if not contemEmprestimo:
-                    print('Você não possui emprestimos')
-                    
+                emprestimoCliente = biblioteca.listarEmprestimosCliente(usuario)
 
+                if len(emprestimoCliente) == 0:
 
+                    print('\n  Você não possui empréstimos registrados.\n')
+
+                else:
+                    for e in emprestimoCliente:
+                        print(e)
 
 
             elif opcao == '2':
-                print('----------- Acervo -----------\n')
-                if len(livros) == 0:
-                    print('Sem livros disponiveis no momento.')
+                print('\n================================================================')
+                print('  ACERVO DA BIBLIOTECA')
+                print('================================================================')
+
+                acervo = biblioteca.listarLivros()
+
+                if len(acervo) == 0:
+                    print('\n  Nenhum livro disponível no momento.\n')
                 else:
-                    for l in livros:
+                    for l in acervo:
                         print(l)
 
 
@@ -86,43 +87,57 @@ def principal():
             elif opcao == '4':
                 ...
             elif opcao == '5':
-                ficarLogado = False
+                logado = False
             else:
-                print('Opção invalida')
+                print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
 
-    elif usuarioLogado[2] == 'bibliotecario':
+    elif usuario.getTipo() == 'bibliotecario':
 
-        while ficarLogado:
+        while logado:
 
-            print('----------- Menu Bibliotecario -----------\n1 - Visualizar Empréstimos\n2 - Visualizar Livros\n3 - Sobre\n4 - Sair')
+            print(usuario.menu())
 
-            opcao = input('Sua opção: ')
+            opcao = input('  Escolha uma opção: ')
             if opcao == '1':
+                print('\n================================================================')
+                print('  EMPRÉSTIMOS DA BIBLIOTECA')
+                print('================================================================')
 
-                if len(emprestimos) == 0:
-                    print('Não existe nenhum emprestimo registrado')
+                emprestimosBiblioteca = biblioteca.listarEmprestimos()
 
-                for e in emprestimos:
+                if len(emprestimosBiblioteca) == 0:
+                    print('\n  Nenhum empréstimo registrado no momento.\n')
+
+                for e in emprestimosBiblioteca:
                     
-                    print(f'Emprestimo: {e[0]} - Usuario: {e[1]} - Livros: {e[2]} - Data Emprestimo: {e[3]}')
+                    print(e)
 
             elif opcao == '2':
 
-                print('----------- Acervo -----------\n')
-                if len(livros) == 0:
-                    print('Sem livros disponiveis no momento.')
+                print('\n================================================================')
+                print('  ACERVO DA BIBLIOTECA')
+                print('================================================================')
+
+                acervo = biblioteca.listarLivros()
+
+                if len(acervo) == 0:
+                    print('\n  Nenhum livro disponível no momento.\n')
                 else:
-                    for l in livros:
+                    for l in acervo:
                         print(l)
+
 
             elif opcao == '3':
                 ...
             elif opcao == '4':
-                ficarLogado = False
+                logado = False
             else:
-                print('Opção invalida')
+                print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
 
 
                     
 if __name__ == '__main__':
+
     principal()
+
+

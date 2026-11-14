@@ -42,6 +42,12 @@ class GerenciadorDeArquivos:
             print('\n  [!] Arquivo usuarios.txt não encontrado.')
             print('  Confira os arquivos de dados da biblioteca.\n')
             raise
+        except PermissionError:
+            print('Houve uma falha de permissão no arquivo usuarios.txt')
+            raise
+        except OSError:
+            print('Error')
+            raise
 
 
     def carregarLivros(self):
@@ -68,11 +74,22 @@ class GerenciadorDeArquivos:
             print('\n  [!] Arquivo livros.txt não encontrado.')
             print('  Confira os arquivos de dados da biblioteca.\n')
             raise
+        except PermissionError:
+            print('Houve uma falha de permissão no arquivo livros.txt')
+            raise
+        except OSError:
+            print('error')
+            raise
 
 
     def carregarEmprestimos(self, usuarios, livros):
         emprestimos = []
-
+        dicionariousuarios= {}
+        dicionariolivros={}
+        for u in usuarios:
+             dicionariousuarios[{u.getcodigo}]
+        for l in livros:
+             dicionariolivros[{l.getcodigo}]
         try:
 
             with open('emprestimos.txt', 'r', encoding='utf-8') as arquivo:
@@ -164,6 +181,12 @@ class GerenciadorDeArquivos:
         except FileNotFoundError:
             print('\n  [!] Arquivo emprestimos.txt não encontrado.')
             print('  Confira os arquivos de dados da biblioteca.\n')
+            raise
+        except PermissionError:
+            print('Houve uma falha de permissão no arquivo emprestimos.txt ')
+            raise
+        except OSError:
+            print('error')
             raise
                 
 

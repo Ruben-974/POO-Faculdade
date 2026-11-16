@@ -1,9 +1,9 @@
 class Biblioteca:
 
-    def __init__(self, usuarios, livros, emprestimos):
-        self.setUsuarios(usuarios)
-        self.setLivros(livros)
-        self.setEmprestimos(emprestimos)
+    def __init__(self, usuarios=None, livros=None, emprestimos=None):
+        self.__usuarios = usuarios
+        self.__livros = livros
+        self.__emprestimos = emprestimos
 
     def getUsuarios(self):
         return self.__usuarios.copy()

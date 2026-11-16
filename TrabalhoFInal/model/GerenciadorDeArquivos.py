@@ -82,7 +82,7 @@ class GerenciadorDeArquivos:
             raise
 
 
-    def carregarEmprestimos(self, usuarios, livros): #lê emprestimod, vincula cada linha aos objetos cliente e livro já carregados, valida datas e renovações e agrupa linhas em uma unica instancia.
+    def carregarEmprestimos(self, usuarios, livros): #lê emprestimos, vincula cada linha aos objetos cliente e livro já carregados, valida datas e renovações e agrupa linhas em uma unica instancia.
 
         emprestimos = []
         dicionariousuarios = {}

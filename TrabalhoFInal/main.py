@@ -209,11 +209,13 @@ def principal():
 
             elif opcao == '5':
 
-                logado = False
+                break
 
             else:
 
                 print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
+
+            input('Precione Enter para continuar...')
 
     elif usuario.getTipo() == 'bibliotecario':
 
@@ -238,11 +240,13 @@ def principal():
 
             elif opcao == '4':
 
-                logado = False
+                break
 
             else:
 
                 print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
+
+            input('Precione Enter para continuar...')
 
 
                     

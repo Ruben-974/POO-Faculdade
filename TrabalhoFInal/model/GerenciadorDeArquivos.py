@@ -84,12 +84,16 @@ class GerenciadorDeArquivos:
 
     def carregarEmprestimos(self, usuarios, livros):
         emprestimos = []
-        dicionariousuarios= {}
-        dicionariolivros={}
-        for C in usuarios:
-             dicionariousuarios[{C.getcodigo}]
-        for C in livros:
-             dicionariolivros[{C.getcodigo}]
+        dicionariousuarios = {}
+        dicionariolivros = {}
+
+        for u in usuarios:
+            dicionariousuarios[u.getCodigo()] = u
+
+        for l in livros:
+            dicionariolivros[l.getCodigo()] = l
+
+
         try:
 
             with open('emprestimos.txt', 'r', encoding='utf-8') as arquivo:

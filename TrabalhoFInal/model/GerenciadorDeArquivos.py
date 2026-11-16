@@ -86,10 +86,10 @@ class GerenciadorDeArquivos:
         emprestimos = []
         dicionariousuarios= {}
         dicionariolivros={}
-        for u in usuarios:
-             dicionariousuarios[{u.getcodigo}]
-        for l in livros:
-             dicionariolivros[{l.getcodigo}]
+        for C in usuarios:
+             dicionariousuarios[{C.getcodigo}]
+        for C in livros:
+             dicionariolivros[{C.getcodigo}]
         try:
 
             with open('emprestimos.txt', 'r', encoding='utf-8') as arquivo:

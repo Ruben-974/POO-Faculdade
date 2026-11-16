@@ -10,7 +10,7 @@ class GerenciadorDeArquivos:
     def __init__(self):
         pass
 
-    def carregarUsuarios(self):
+    def carregarUsuarios(self):    #carregar usuários lê o arquivo usuario.txt,valida cada linha, com separaçãode ";" e retorna          uma lista com objetos Cliente e Bibliotecario
 
         try:
 
@@ -50,7 +50,7 @@ class GerenciadorDeArquivos:
             raise
 
 
-    def carregarLivros(self):
+    def carregarLivros(self): # lê livros.txt, valida cada linha para ver se há campos vazios e retorna uma lista de objetos.
 
         try:
 
@@ -82,7 +82,8 @@ class GerenciadorDeArquivos:
             raise
 
 
-    def carregarEmprestimos(self, usuarios, livros):
+    def carregarEmprestimos(self, usuarios, livros): #lê emprestimod, vincula cada linha aos objetos cliente e livro já carregados, valida datas e renovações e agrupa linhas em uma unica instancia.
+
         emprestimos = []
         dicionariousuarios = {}
         dicionariolivros = {}
@@ -192,9 +193,9 @@ class GerenciadorDeArquivos:
         except OSError:
             print('error')
             raise
-                
+ 
 
-    def salvarEmprestimos(self, emprestimos):
+    def salvarEmprestimos(self, emprestimos): #insiste nas alterações feitas no emprestimos usando um arquivo temporario.
 
         try: 
             with open('temporario.txt', 'w', encoding='utf-8') as arquivo:

@@ -1,3 +1,4 @@
+# Centraliza as coleções e buscas, sem ler arquivos ou receber entradas do terminal.
 class Biblioteca:
 
     def __init__(self, usuarios=None, livros=None, emprestimos=None):
@@ -6,6 +7,7 @@ class Biblioteca:
         self.__emprestimos = emprestimos
 
     def getUsuarios(self):
+        # Os retornos das coleções são cópias da lista, mantendo os mesmos objetos.
         return self.__usuarios.copy()
 
     def setUsuarios(self, usuarios):
@@ -24,6 +26,7 @@ class Biblioteca:
         self.__emprestimos = emprestimos.copy()
 
     def buscarUsuario(self, chave):
+        # A busca por código tem prioridade sobre a busca por login.
         for u in self.getUsuarios():
             if u.getCodigo() == chave:
                 return u
@@ -50,7 +53,8 @@ class Biblioteca:
     def listarEmprestimos(self):
         return self.__emprestimos.copy()
 
-    def listarEmprestimosCliente(self, cliente): # cliente  = obj cliente
+    def listarEmprestimosCliente(self, cliente):
+        # Compara os códigos dos clientes associados, não a identidade dos objetos.
         emprestimos = []
         for e in self.getEmprestimos():
             if e.getCliente().getCodigo() == cliente.getCodigo():

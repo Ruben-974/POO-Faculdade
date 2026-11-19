@@ -10,7 +10,8 @@ class GerenciadorDeArquivos:
     def __init__(self):
         pass
 
-    def carregarUsuarios(self):    #carregar usuários lê o arquivo usuario.txt,valida cada linha, com separaçãode ";" e retorna          uma lista com objetos Cliente e Bibliotecario
+    def carregarUsuarios(self):
+        # Cada registro de usuarios.txt origina um objeto do perfil informado.
 
         try:
 
@@ -50,7 +51,8 @@ class GerenciadorDeArquivos:
             raise
 
 
-    def carregarLivros(self): # lê livros.txt, valida cada linha para ver se há campos vazios e retorna uma lista de objetos.
+    def carregarLivros(self):
+        # Valida os campos do TXT antes de criar os objetos do acervo.
 
         try:
 
@@ -82,9 +84,11 @@ class GerenciadorDeArquivos:
             raise
 
 
-    def carregarEmprestimos(self, usuarios, livros): #lê emprestimos, vincula cada linha aos objetos cliente e livro já carregados, valida datas e renovações e agrupa linhas em uma unica instancia.
+    def carregarEmprestimos(self, usuarios, livros):
+        # Agrupa as linhas por empréstimo e associa os objetos já carregados.
 
         emprestimos = []
+        # Os índices por código evitam percorrer as listas a cada registro.
         dicionariousuarios = {}
         dicionariolivros = {}
 
@@ -93,7 +97,6 @@ class GerenciadorDeArquivos:
 
         for l in livros:
             dicionariolivros[l.getCodigo()] = l
-
 
         try:
 
@@ -113,15 +116,12 @@ class GerenciadorDeArquivos:
 
                         codigoEmprestimo, codigoCliente, codigoLivro, data, renovacao = dadosDaLinha
 
-                        for u in usuarios:
-                            if u.getCodigo() == codigoCliente and u.getTipo() == 'cliente':
-                                cliente = u
-                                break
+                        cliente = dicionariousuarios.get(codigoCliente)
+                        # Bibliotecários não podem ser responsáveis por empréstimos.
+                        if cliente is not None and cliente.getTipo() != 'cliente':
+                            cliente = None
 
-                        for l in livros:
-                            if l.getCodigo() == codigoLivro:
-                                livro = l
-                                break
+                        livro = dicionariolivros.get(codigoLivro)
 
                         existeEmprestimo = False
 
@@ -152,6 +152,7 @@ class GerenciadorDeArquivos:
 
                             if e.getCodigo() == codigoEmprestimo:
 
+                                # Linhas do mesmo empréstimo precisam descrever a mesma operação.
                                 if e.getCliente().getCodigo() != codigoCliente:
                                     raise ValueError(
                                         f'emprestimos.txt, linha {numeroLinha}: '
@@ -195,14 +196,17 @@ class GerenciadorDeArquivos:
             raise
  
 
-    def salvarEmprestimos(self, emprestimos): #insiste nas alterações feitas no emprestimos usando um arquivo temporario.
+    def salvarEmprestimos(self, emprestimos):
+        # Prepara o novo conteúdo sem sobrescrever o arquivo original durante a escrita.
 
         try: 
             with open('temporario.txt', 'w', encoding='utf-8') as arquivo:
                 for e in emprestimos:
+                    # O TXT mantém uma linha por livro, com o contador de renovações.
                     for l in e.getLivros():
                         arquivo.write(f'{e.getCodigo()};{e.getCliente().getCodigo()};{l.getCodigo()};{e.getDataEmprestimo().strftime('%d/%m/%Y')};{e.getRenovacoes()}\n')
             
+            # Substitui o original somente depois de concluir e fechar o temporário.
             os.replace('temporario.txt', 'emprestimos.txt')
 
         except OSError as erro:
@@ -210,6 +214,7 @@ class GerenciadorDeArquivos:
             raise
 
         finally:
+            # Remove o temporário caso uma falha tenha interrompido a gravação.
             if os.path.exists('temporario.txt'):
                 try:
                     os.remove('temporario.txt')

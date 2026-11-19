@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+# Base comum dos perfis; cada subclasse fornece seu próprio menu.
 class Usuario(ABC):
     def __init__(self, codigo=None, nome=None, tipo=None, login=None, senha=None):
         self.__codigo = codigo
@@ -38,9 +39,11 @@ class Usuario(ABC):
     def setSenha(self, senha):
         self.__senha = senha
 
+    # Exige a implementação de menu() nas subclasses concretas.
     @abstractmethod
     def menu(self):
         pass
 
     def __str__(self):
+        # A identificação exibida não inclui dados de autenticação.
         return f'CODIGO: {self.__codigo} - NOME: {self.__nome}'

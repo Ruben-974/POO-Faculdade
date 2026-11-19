@@ -1,3 +1,4 @@
+# Representa um item do acervo, também associado aos empréstimos.
 class Livro:
     def __init__(self, codigo=None, titulo=None, autor=None):
         self.__codigo = codigo
@@ -23,6 +24,7 @@ class Livro:
         self.__autor = autor
 
     def __str__(self):
+        # Permite exibir os dados do livro com print(livro).
         return (
             f'\n  Código : {self.__codigo}\n'
             f'  Título : {self.__titulo}\n'

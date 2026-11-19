@@ -17,6 +17,7 @@ def exibirLivros(biblioteca):
             print(l)
 
 def exibirEmprestimos(emprestimos, titulo, mensagem):
+    # A coleção recebida já foi selecionada conforme o perfil autenticado.
     print('\n================================================================')
     print(f'  {titulo}')
     print('================================================================')
@@ -103,6 +104,7 @@ def principal():
 
     try: 
 
+        # Usuários e livros precisam existir antes de montar os empréstimos.
         usuarios = gerenciador.carregarUsuarios()
         livros = gerenciador.carregarLivros()
         emprestimos = gerenciador.carregarEmprestimos(usuarios, livros)
@@ -116,6 +118,11 @@ def principal():
         print(f'\n  [!] Dados inválidos: {erro}\n')
         return
 
+    except OSError as erro:
+
+        print(f'\n  [!] Não foi possível ler os arquivos de dados: {erro}\n')
+        return
+
     loginInvalido = True
 
     print('\n================================================================')
@@ -124,6 +131,7 @@ def principal():
     print('----------------------------------------------------------------')
     print('  ACESSO AO SISTEMA\n')
 
+    # O acesso ao menu depende da identificação do usuário e da senha correta.
     while loginInvalido:
 
         inputLogin = input('  Login: ')
@@ -150,26 +158,33 @@ def principal():
 
     logado = True
 
+    # Cada perfil recebe seu menu e as operações permitidas.
     if usuario.getTipo() == 'cliente':
 
         while logado:
 
             print(usuario.menu())
 
-            opcao = input('  Escolha uma opção: ')
+            try:
+                opcao = int(input('  Escolha uma opção: '))
+            except ValueError:
+                print('\n  [!] Informe uma opção numérica.\n')
+                # Uma entrada não numérica retorna ao menu.
+                continue
 
-            if opcao == '1':
+            if opcao == 1:
 
+                # A consulta do cliente fica restrita aos próprios empréstimos.
                 emprestimoCliente = biblioteca.listarEmprestimosCliente(usuario)
                 exibirEmprestimos(emprestimoCliente, 'MEUS EMPRÉSTIMOS', 'Você não possui empréstimos registrados.')
 
 
-            elif opcao == '2':
+            elif opcao == 2:
 
                 exibirLivros(biblioteca)
 
 
-            elif opcao == '3':
+            elif opcao == 3:
 
                 codigo = input('\n  Código do empréstimo: ')
                 emprestimo = biblioteca.buscarEmprestimo(codigo)
@@ -177,6 +192,7 @@ def principal():
                 if emprestimo is None: 
                     print('\n  [!] Empréstimo não encontrado.\n')
 
+                # Conhecer o código não autoriza renovar o empréstimo de outro cliente.
                 elif emprestimo.getCliente().getCodigo() != usuario.getCodigo():
                     print('\n  [!] Este empréstimo não pertence a você.\n')
 
@@ -189,6 +205,7 @@ def principal():
                         try:
                             gerenciador.salvarEmprestimos(emprestimos)
                         except OSError:
+                            # Desfaz a alteração em memória se a gravação falhar.
                             emprestimo.setRenovacoes(renovacoesAnteriores)
                             print('\n  [!] Renovação não confirmada: não foi possível salvar os dados. Tente novamente.\n')
                         else:
@@ -203,11 +220,11 @@ def principal():
 
 
                 
-            elif opcao == '4':
+            elif opcao == 4:
 
                 exibirSobre()
 
-            elif opcao == '5':
+            elif opcao == 5:
 
                 break
 
@@ -223,22 +240,27 @@ def principal():
 
             print(usuario.menu())
 
-            opcao = input('  Escolha uma opção: ')
-            if opcao == '1':
+            try:
+                opcao = int(input('  Escolha uma opção: '))
+            except ValueError:
+                print('\n  [!] Informe uma opção numérica.\n')
+                continue
+
+            if opcao == 1:
 
                 emprestimosBiblioteca = biblioteca.listarEmprestimos()
 
                 exibirEmprestimos(emprestimosBiblioteca, 'EMPRÉSTIMOS DA BIBLIOTECA', 'Nenhum empréstimo registrado no momento.')
 
-            elif opcao == '2':
+            elif opcao == 2:
 
                 exibirLivros(biblioteca)
 
-            elif opcao == '3':
+            elif opcao == 3:
 
                 exibirSobre()
 
-            elif opcao == '4':
+            elif opcao == 4:
 
                 break
 

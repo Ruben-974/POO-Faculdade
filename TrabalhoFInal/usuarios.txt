@@ -2,3 +2,7 @@ U001;João Pedro;cliente;joao;1234
 U002;Maria Souza;cliente;maria;5678
 U003;Carlos Lima;bibliotecario;carlos;abcd
 U004;Israel;bibliotecario;israel;319
+U005;Ana Oliveira;cliente;ana;ana123
+U006;Pedro Santos;cliente;pedro;pedro123
+U007;Luiza Ferreira;cliente;luiza;luiza123
+U008;Bruno Almeida;cliente;bruno;bruno123

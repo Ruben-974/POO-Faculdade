@@ -3,3 +3,22 @@ L002;O Cortiço;Aluísio Azevedo
 L003;Vidas Secas;Graciliano Ramos
 L004;A Hora da Estrela;Clarice Lispector
 L005;Capitães da Areia;Jorge Amado
+L006;Memórias Póstumas de Brás Cubas;Machado de Assis
+L007;O Alienista;Machado de Assis
+L008;Iracema;José de Alencar
+L009;Senhora;José de Alencar
+L010;O Guarani;José de Alencar
+L011;A Moreninha;Joaquim Manuel de Macedo
+L012;O Crime do Padre Amaro;Eça de Queirós
+L013;O Primo Basílio;Eça de Queirós
+L014;Os Maias;Eça de Queirós
+L015;Mensagem;Fernando Pessoa
+L016;Os Lusíadas;Luís de Camões
+L017;Triste Fim de Policarpo Quaresma;Lima Barreto
+L018;Clara dos Anjos;Lima Barreto
+L019;Alguma Poesia;Carlos Drummond de Andrade
+L020;Romanceiro da Inconfidência;Cecília Meireles
+L021;São Bernardo;Graciliano Ramos
+L022;Fogo Morto;José Lins do Rego
+L023;Quarto de Despejo;Carolina Maria de Jesus
+L024;Auto da Compadecida;Ariano Suassuna

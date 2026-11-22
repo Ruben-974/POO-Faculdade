@@ -353,7 +353,7 @@ class JanelaBiblioteca(QMainWindow):
         if 'sair' in self.opcoesMenu:
             sair = QPushButton(self.opcoesMenu['sair'])
             sair.setObjectName('secundario')
-            sair.clicked.connect(self.close)
+            sair.clicked.connect(self.encerrarSessao)
             cabecalho.addWidget(sair)
         principal.addLayout(cabecalho)
         self.abas = QTabWidget()
@@ -378,6 +378,27 @@ class JanelaBiblioteca(QMainWindow):
         if 'emprestimos' in self.opcoesMenu:
             self.atualizarEmprestimos()
         return pagina
+
+    def encerrarSessao(self):
+        self.usuario = None
+        self.opcoesMenu = {}
+        self.emprestimos = []
+        self.paginas.setCurrentIndex(0)
+
+        # Descarta a tela anterior para não reutilizar dados de outro usuário.
+        while self.paginas.count() > 1:
+            pagina = self.paginas.widget(1)
+            self.paginas.removeWidget(pagina)
+            pagina.deleteLater()
+
+        self.campoLogin.clear()
+        self.campoSenha.clear()
+        mensagem(self.erroLogin, 'Sessão encerrada. Entre para continuar.')
+        self.setMinimumSize(480, 620)
+        self.resize(560, 720)
+        area = self.screen().availableGeometry()
+        self.move(area.center() - self.rect().center())
+        self.campoLogin.setFocus()
 
     def renovar(self):
         if 'renovar' not in self.opcoesMenu:

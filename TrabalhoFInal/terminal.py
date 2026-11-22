@@ -133,157 +133,163 @@ def principal():
         print(f'\n  [!] Não foi possível ler os arquivos de dados: {erro}\n')
         return
 
-    loginInvalido = True
+    # Cada saída do menu inicia uma nova autenticação.
+    while True:
+        usuario = None
+        loginInvalido = True
 
-    print('\n================================================================')
-    print('  Índices | PRISMA')
-    print('  Ideias em Solução')
-    print('----------------------------------------------------------------')
-    print('  ACESSO AO SISTEMA\n')
+        print('\n================================================================')
+        print('  Índices | PRISMA')
+        print('  Ideias em Solução')
+        print('----------------------------------------------------------------')
+        print('  ACESSO AO SISTEMA\n')
 
-    # O acesso ao menu depende da identificação do usuário e da senha correta.
-    while loginInvalido:
+        # O acesso ao menu depende da identificação do usuário e da senha correta.
+        while loginInvalido:
 
-        inputLogin = input('  Login: ')
+            inputLogin = input('  Login: ')
 
-        usuario = biblioteca.buscarUsuario(inputLogin)
+            usuario = biblioteca.buscarUsuario(inputLogin)
 
-        if not usuario is None:
+            if not usuario is None:
 
-            loginInvalido = False
-            senhaInvalida = True
-            
-            while senhaInvalida:
-                inputSenha = input('  Senha: ')
-                if inputSenha != usuario.getSenha():
-                    print('\n  [!] Senha inválida. Tente novamente.\n')
-                else:
-                    senhaInvalida = False
-      
-        if loginInvalido:
-            print('\n  [!] Login inválido. Tente novamente.\n')
+                loginInvalido = False
+                senhaInvalida = True
 
-    print('\n  Login realizado com sucesso!')
-    print('================================================================')
+                while senhaInvalida:
+                    inputSenha = input('  Senha: ')
+                    if inputSenha != usuario.getSenha():
+                        print('\n  [!] Senha inválida. Tente novamente.\n')
+                    else:
+                        senhaInvalida = False
 
-    logado = True
+            if loginInvalido:
+                print('\n  [!] Login inválido. Tente novamente.\n')
 
-    # Cada perfil recebe seu menu e as operações permitidas.
-    if usuario.getTipo() == 'cliente':
+        print('\n  Login realizado com sucesso!')
+        print('================================================================')
 
-        while logado:
+        logado = True
 
-            exibirMenu(usuario)
+        # Cada perfil recebe seu menu e as operações permitidas.
+        if usuario.getTipo() == 'cliente':
 
-            try:
-                opcao = int(input('  Escolha uma opção: '))
-            except ValueError:
-                print('\n  [!] Informe uma opção numérica.\n')
-                # Uma entrada não numérica retorna ao menu.
-                continue
+            while logado:
 
-            if opcao == 1:
+                exibirMenu(usuario)
 
-                # A consulta do cliente fica restrita aos próprios empréstimos.
-                emprestimoCliente = biblioteca.listarEmprestimosCliente(usuario)
-                exibirEmprestimos(emprestimoCliente, 'MEUS EMPRÉSTIMOS', 'Você não possui empréstimos registrados.')
+                try:
+                    opcao = int(input('  Escolha uma opção: '))
+                except ValueError:
+                    print('\n  [!] Informe uma opção numérica.\n')
+                    # Uma entrada não numérica retorna ao menu.
+                    continue
 
+                if opcao == 1:
 
-            elif opcao == 2:
-
-                exibirLivros(biblioteca)
+                    # A consulta do cliente fica restrita aos próprios empréstimos.
+                    emprestimoCliente = biblioteca.listarEmprestimosCliente(usuario)
+                    exibirEmprestimos(emprestimoCliente, 'MEUS EMPRÉSTIMOS', 'Você não possui empréstimos registrados.')
 
 
-            elif opcao == 3:
+                elif opcao == 2:
 
-                codigo = input('\n  Código do empréstimo: ')
-                emprestimo = biblioteca.buscarEmprestimo(codigo)
+                    exibirLivros(biblioteca)
 
-                if emprestimo is None: 
-                    print('\n  [!] Empréstimo não encontrado.\n')
 
-                # Conhecer o código não autoriza renovar o empréstimo de outro cliente.
-                elif emprestimo.getCliente().getCodigo() != usuario.getCodigo():
-                    print('\n  [!] Este empréstimo não pertence a você.\n')
+                elif opcao == 3:
 
-                else:
-                    dataAtual = datetime.now()
-                    renovacoesAnteriores = emprestimo.getRenovacoes()
+                    codigo = input('\n  Código do empréstimo: ')
+                    emprestimo = biblioteca.buscarEmprestimo(codigo)
 
-                    if emprestimo.renovar(dataAtual):
+                    if emprestimo is None:
+                        print('\n  [!] Empréstimo não encontrado.\n')
 
-                        try:
-                            gerenciador.salvarEmprestimos(emprestimos)
-                        except OSError:
-                            # Desfaz a alteração em memória se a gravação falhar.
-                            emprestimo.setRenovacoes(renovacoesAnteriores)
-                            print('\n  [!] Renovação não confirmada: não foi possível salvar os dados. Tente novamente.\n')
-                        else:
-                            novaData = emprestimo.getDataDevolucao().strftime('%d/%m/%Y')
-                            print('\n  Empréstimo renovado com sucesso!')
-                            print(f'  Nova data de devolução: {novaData}\n')
-
+                    # Conhecer o código não autoriza renovar o empréstimo de outro cliente.
+                    elif emprestimo.getCliente().getCodigo() != usuario.getCodigo():
+                        print('\n  [!] Este empréstimo não pertence a você.\n')
 
                     else:
-                        print('\n  [!] Não foi possível renovar: '
-                            'empréstimo atrasado ou limite de renovações atingido.\n')
+                        dataAtual = datetime.now()
+                        renovacoesAnteriores = emprestimo.getRenovacoes()
+
+                        if emprestimo.renovar(dataAtual):
+
+                            try:
+                                gerenciador.salvarEmprestimos(emprestimos)
+                            except OSError:
+                                # Desfaz a alteração em memória se a gravação falhar.
+                                emprestimo.setRenovacoes(renovacoesAnteriores)
+                                print('\n  [!] Renovação não confirmada: não foi possível salvar os dados. Tente novamente.\n')
+                            else:
+                                novaData = emprestimo.getDataDevolucao().strftime('%d/%m/%Y')
+                                print('\n  Empréstimo renovado com sucesso!')
+                                print(f'  Nova data de devolução: {novaData}\n')
 
 
-                
-            elif opcao == 4:
-
-                exibirSobre()
-
-            elif opcao == 5:
-
-                break
-
-            else:
-
-                print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
-
-            input('Precione Enter para continuar...')
-
-    elif usuario.getTipo() == 'bibliotecario':
-
-        while logado:
-
-            exibirMenu(usuario)
-
-            try:
-                opcao = int(input('  Escolha uma opção: '))
-            except ValueError:
-                print('\n  [!] Informe uma opção numérica.\n')
-                continue
-
-            if opcao == 1:
-
-                emprestimosBiblioteca = biblioteca.listarEmprestimos()
-
-                exibirEmprestimos(emprestimosBiblioteca, 'EMPRÉSTIMOS DA BIBLIOTECA', 'Nenhum empréstimo registrado no momento.')
-
-            elif opcao == 2:
-
-                exibirLivros(biblioteca)
-
-            elif opcao == 3:
-
-                exibirSobre()
-
-            elif opcao == 4:
-
-                break
-
-            else:
-
-                print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
-
-            input('Precione Enter para continuar...')
+                        else:
+                            print('\n  [!] Não foi possível renovar: '
+                                'empréstimo atrasado ou limite de renovações atingido.\n')
 
 
-                    
+
+                elif opcao == 4:
+
+                    exibirSobre()
+
+                elif opcao == 5:
+
+                    break
+
+                else:
+
+                    print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
+
+                input('Precione Enter para continuar...')
+
+        elif usuario.getTipo() == 'bibliotecario':
+
+            while logado:
+
+                exibirMenu(usuario)
+
+                try:
+                    opcao = int(input('  Escolha uma opção: '))
+                except ValueError:
+                    print('\n  [!] Informe uma opção numérica.\n')
+                    continue
+
+                if opcao == 1:
+
+                    emprestimosBiblioteca = biblioteca.listarEmprestimos()
+
+                    exibirEmprestimos(emprestimosBiblioteca, 'EMPRÉSTIMOS DA BIBLIOTECA', 'Nenhum empréstimo registrado no momento.')
+
+                elif opcao == 2:
+
+                    exibirLivros(biblioteca)
+
+                elif opcao == 3:
+
+                    exibirSobre()
+
+                elif opcao == 4:
+
+                    break
+
+                else:
+
+                    print('\n  [!] Opção inválida. Escolha uma opção do menu.\n')
+
+                input('Precione Enter para continuar...')
+
+        print('\n  Sessão encerrada. Entre novamente para continuar.\n')
+
+
 if __name__ == '__main__':
-
-    principal()
+    try:
+        principal()
+    except (EOFError, KeyboardInterrupt):
+        print('\n  Programa encerrado.\n')
 
 

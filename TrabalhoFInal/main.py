@@ -36,7 +36,10 @@ def logo(nome, largura, altura):
     imagem = rotulo()
     pixmap = QPixmap(str(PASTA / 'assets' / f'{nome}.png'))
     if pixmap.isNull():
-        imagem.setText('ÍNDICES' if nome == 'indices' else 'PRISMA · Ideias em Solução')
+        if nome == 'indices':
+            imagem.setText('ÍNDICES')
+        else:
+            imagem.setText('PRISMA · Ideias em Solução')
         imagem.setObjectName('titulo')
     else:
         imagem.setPixmap(pixmap.scaled(largura, altura, Qt.AspectRatioMode.KeepAspectRatio,
@@ -82,7 +85,8 @@ def carregarSistema():
         usuarios = gerenciador.carregarUsuarios()
         livros = gerenciador.carregarLivros()
         emprestimos = gerenciador.carregarEmprestimos(usuarios, livros)
-    return Biblioteca(usuarios, livros, emprestimos), gerenciador
+    biblioteca = Biblioteca(usuarios, livros, emprestimos)
+    return biblioteca, gerenciador
 
 
 def renovarEmprestimo(biblioteca, gerenciador, usuario, emprestimo, dataAtual=None):
@@ -92,7 +96,10 @@ def renovarEmprestimo(biblioteca, gerenciador, usuario, emprestimo, dataAtual=No
     if emprestimo.getCliente().getCodigo() != usuario.getCodigo():
         raise ValueError('Este empréstimo não pertence a você.')
     anterior = emprestimo.getRenovacoes()
-    if not emprestimo.renovar(dataAtual or datetime.now()):
+    if dataAtual is None:
+        dataAtual = datetime.now()
+
+    if not emprestimo.renovar(dataAtual):
         raise ValueError('Renovação recusada: empréstimo atrasado ou limite atingido.')
     try:
         with redirect_stdout(StringIO()):
@@ -118,7 +125,7 @@ class JanelaBiblioteca(QMainWindow):
         self.setCentralWidget(self.paginas)
         self.paginas.addWidget(self.criarLogin())
 
-    # Consultas na mesma ordem das funções de exibição do main.py.
+    # Consultas na mesma ordem das funções de exibição do terminal.py.
     def criarAbaAcervo(self):
         pagina = QWidget()
         layout = QVBoxLayout(pagina)
@@ -131,23 +138,45 @@ class JanelaBiblioteca(QMainWindow):
         livros = self.biblioteca.listarLivros()
         self.tabelaLivros.setRowCount(len(livros))
         for linha, livro in enumerate(livros):
-            for coluna, valor in enumerate([livro.getCodigo(), livro.getTitulo(), livro.getAutor()]):
+            valores = []
+            valores.append(livro.getCodigo())
+            valores.append(livro.getTitulo())
+            valores.append(livro.getAutor())
+
+            for coluna, valor in enumerate(valores):
                 self.tabelaLivros.setItem(linha, coluna, QTableWidgetItem(valor))
         layout.addWidget(self.tabelaLivros, 1)
-        layout.addWidget(rotulo(f'{len(livros)} livros no acervo' if livros else 'Nenhum livro disponível.', 'muted'))
+        if len(livros) == 0:
+            textoAcervo = 'Nenhum livro disponível.'
+        else:
+            textoAcervo = f'{len(livros)} livros no acervo'
+        layout.addWidget(rotulo(textoAcervo, 'muted'))
         return pagina
 
     def criarAbaEmprestimos(self):
-        cliente = self.usuario.getTipo() == 'cliente'
         pagina = QWidget()
         layout = QVBoxLayout(pagina)
         layout.setContentsMargins(8, 22, 8, 12)
         layout.setSpacing(18)
-        layout.addWidget(rotulo('Meus empréstimos' if cliente else 'Empréstimos da biblioteca', 'titulo'))
-        colunas = ['Código'] + ([] if cliente else ['Cliente'])
-        colunas += ['Livros', 'Devolução', 'Renovações', 'Multa']
+        if self.usuario.getTipo() == 'cliente':
+            titulo = 'Meus empréstimos'
+        else:
+            titulo = 'Empréstimos da biblioteca'
+        layout.addWidget(rotulo(titulo, 'titulo'))
+
+        colunas = []
+        colunas.append('Código')
+        if self.usuario.getTipo() == 'bibliotecario':
+            colunas.append('Cliente')
+        colunas.append('Livros')
+        colunas.append('Devolução')
+        colunas.append('Renovações')
+        colunas.append('Multa')
         self.tabelaEmprestimos = tabela(colunas)
-        indiceLivros = 1 if cliente else 2
+        if self.usuario.getTipo() == 'cliente':
+            indiceLivros = 1
+        else:
+            indiceLivros = 2
         self.tabelaEmprestimos.horizontalHeader().setSectionResizeMode(indiceLivros, QHeaderView.ResizeMode.Stretch)
         self.tabelaEmprestimos.itemSelectionChanged.connect(self.selecionarEmprestimo)
         layout.addWidget(self.tabelaEmprestimos, 1)
@@ -166,38 +195,64 @@ class JanelaBiblioteca(QMainWindow):
         self.botaoRenovar.setObjectName('primario')
         self.botaoRenovar.setEnabled(False)
         # O menu do perfil define se a interface oferece renovação.
-        self.botaoRenovar.setVisible('renovar' in self.opcoesMenu)
+        if 'renovar' in self.opcoesMenu:
+            self.botaoRenovar.setVisible(True)
+        else:
+            self.botaoRenovar.setVisible(False)
         self.botaoRenovar.clicked.connect(self.renovar)
         detalhes.addWidget(self.botaoRenovar)
         layout.addWidget(quadro)
         return pagina
 
     def atualizarEmprestimos(self, codigoSelecionado=None):
-        cliente = self.usuario.getTipo() == 'cliente'
-        self.emprestimos = (self.biblioteca.listarEmprestimosCliente(self.usuario) if cliente
-                            else self.biblioteca.listarEmprestimos())
+        if self.usuario.getTipo() == 'cliente':
+            self.emprestimos = self.biblioteca.listarEmprestimosCliente(self.usuario)
+        else:
+            self.emprestimos = self.biblioteca.listarEmprestimos()
         self.tabelaEmprestimos.blockSignals(True)
         try:
             self.tabelaEmprestimos.setRowCount(0)
             agora = datetime.now()
-            for indice, e in enumerate(self.emprestimos):
-                valores = [e.getCodigo()] + ([] if cliente else [e.getCliente().getNome()])
-                valores += ['; '.join(l.getTitulo() for l in e.getLivros()),
-                            e.getDataDevolucao().strftime('%d/%m/%Y'),
-                            f'{e.getRenovacoes()} de {MAX_RENOVACOES}',
-                            f'R$ {e.calcularMulta(agora):.2f}'.replace('.', ',')]
+            for indice, emprestimo in enumerate(self.emprestimos):
+                titulos = []
+                for livro in emprestimo.getLivros():
+                    titulos.append(livro.getTitulo())
+                textoLivros = '; '.join(titulos)
+
+                dataDevolucao = emprestimo.getDataDevolucao().strftime('%d/%m/%Y')
+                renovacoes = emprestimo.getRenovacoes()
+                textoRenovacoes = f'{renovacoes} de {MAX_RENOVACOES}'
+                multa = emprestimo.calcularMulta(agora)
+                textoMulta = f'R$ {multa:.2f}'
+                textoMulta = textoMulta.replace('.', ',')
+
+                valores = []
+                valores.append(emprestimo.getCodigo())
+                if self.usuario.getTipo() == 'bibliotecario':
+                    valores.append(emprestimo.getCliente().getNome())
+                valores.append(textoLivros)
+                valores.append(dataDevolucao)
+                valores.append(textoRenovacoes)
+                valores.append(textoMulta)
+
+                colunaDevolucao = len(valores) - 3
+                colunaMulta = len(valores) - 1
                 self.tabelaEmprestimos.insertRow(indice)
                 for coluna, valor in enumerate(valores):
                     item = QTableWidgetItem(valor)
                     item.setToolTip(valor)
-                    if e.estaAtrasado(agora) and coluna in (len(valores) - 3, len(valores) - 1):
-                        item.setForeground(QColor('#ffbf47'))
+                    if emprestimo.estaAtrasado(agora):
+                        if coluna == colunaDevolucao or coluna == colunaMulta:
+                            item.setForeground(QColor('#ffbf47'))
                     self.tabelaEmprestimos.setItem(indice, coluna, item)
-                if e.getCodigo() == codigoSelecionado:
+                if emprestimo.getCodigo() == codigoSelecionado:
                     self.tabelaEmprestimos.selectRow(indice)
         finally:
             self.tabelaEmprestimos.blockSignals(False)
-        self.vazioEmprestimos.setVisible(not self.emprestimos)
+        if len(self.emprestimos) == 0:
+            self.vazioEmprestimos.setVisible(True)
+        else:
+            self.vazioEmprestimos.setVisible(False)
         self.selecionarEmprestimo()
 
     def selecionarEmprestimo(self):
@@ -205,16 +260,30 @@ class JanelaBiblioteca(QMainWindow):
         if linha < 0 or linha >= len(self.emprestimos):
             self.botaoRenovar.setEnabled(False)
             return
-        e = self.emprestimos[linha]
-        detalhes = (f'Empréstimo {e.getCodigo()} · Cliente: {e.getCliente().getNome()}\n'
-                    f'Data inicial: {e.getDataEmprestimo():%d/%m/%Y} · '
-                    f'Devolução: {e.getDataDevolucao():%d/%m/%Y}\n'
-                    f'Livros: {"; ".join(l.getTitulo() for l in e.getLivros())}')
-        permitido = ('renovar' in self.opcoesMenu and self.usuario.getTipo() == 'cliente'
-                      and not e.estaAtrasado(datetime.now())
-                      and e.getRenovacoes() < MAX_RENOVACOES)
-        if self.usuario.getTipo() == 'cliente' and not permitido:
-            detalhes += '\nRenovação indisponível: atraso ou limite atingido.'
+        emprestimo = self.emprestimos[linha]
+        titulos = []
+        for livro in emprestimo.getLivros():
+            titulos.append(livro.getTitulo())
+        textoLivros = '; '.join(titulos)
+
+        detalhes = f'Empréstimo {emprestimo.getCodigo()} · Cliente: {emprestimo.getCliente().getNome()}\n'
+        detalhes += f'Data inicial: {emprestimo.getDataEmprestimo():%d/%m/%Y} · '
+        detalhes += f'Devolução: {emprestimo.getDataDevolucao():%d/%m/%Y}\n'
+        detalhes += f'Livros: {textoLivros}'
+
+        permitido = True
+        if 'renovar' not in self.opcoesMenu:
+            permitido = False
+        if self.usuario.getTipo() != 'cliente':
+            permitido = False
+        if emprestimo.estaAtrasado(datetime.now()):
+            permitido = False
+        if emprestimo.getRenovacoes() >= MAX_RENOVACOES:
+            permitido = False
+
+        if self.usuario.getTipo() == 'cliente':
+            if permitido == False:
+                detalhes += '\nRenovação indisponível: atraso ou limite atingido.'
         self.detalhes.setText(detalhes)
         self.botaoRenovar.setEnabled(permitido)
 
@@ -241,12 +310,13 @@ class JanelaBiblioteca(QMainWindow):
             'Inspirada na refração da luz, sua identidade reúne diferentes feixes '
             'coloridos em uma única luz: a colaboração transforma ideias em solução.', 'muted'))
         historia.addWidget(rotulo('Nossa equipe', 'saudacao'))
-        for nome, cargo in [
+        equipe = [
             ('Rúben Israel', 'Líder Técnico'),
             ('Gustavo Henrique', 'Engenheiro de Software'),
             ('Gustavo Ramos', 'Analista de Sistemas e Desenvolvedor'),
             ('Gabriel Valverde', 'Desenvolvedor e Analista de Qualidade (QA)'),
-        ]:
+        ]
+        for nome, cargo in equipe:
             linha = QHBoxLayout()
             linha.addWidget(rotulo(nome, 'legenda'), 2)
             linha.addWidget(rotulo(cargo, 'muted'), 3)
@@ -286,7 +356,8 @@ class JanelaBiblioteca(QMainWindow):
         self.campoSenha.setPlaceholderText('Sua senha')
         self.campoSenha.setAccessibleName('Senha')
         self.campoSenha.setEchoMode(QLineEdit.EchoMode.Password)
-        for texto, campo in [('Login', self.campoLogin), ('Senha', self.campoSenha)]:
+        campos = [('Login', self.campoLogin), ('Senha', self.campoSenha)]
+        for texto, campo in campos:
             legenda = rotulo(texto, 'legenda')
             legenda.setBuddy(campo)
             conteudo.addWidget(legenda)
@@ -311,9 +382,15 @@ class JanelaBiblioteca(QMainWindow):
         try:
             if self.biblioteca is None:
                 self.biblioteca, self.gerenciador = carregarSistema()
-            login, senha = self.campoLogin.text().strip(), self.campoSenha.text()
-            usuario = next((u for u in self.biblioteca.getUsuarios()
-                            if u.getLogin() == login and u.getSenha() == senha), None)
+            login = self.campoLogin.text().strip()
+            senha = self.campoSenha.text()
+            usuario = None
+
+            for usuarioCadastrado in self.biblioteca.getUsuarios():
+                if usuarioCadastrado.getLogin() == login:
+                    if usuarioCadastrado.getSenha() == senha:
+                        usuario = usuarioCadastrado
+                        break
             if usuario is None:
                 mensagem(self.erroLogin, 'Login ou senha inválidos. Tente novamente.', 'erro')
                 self.campoSenha.clear()
@@ -337,7 +414,6 @@ class JanelaBiblioteca(QMainWindow):
 
     def criarPrincipal(self):
         self.opcoesMenu = self.usuario.menu()
-        cliente = self.usuario.getTipo() == 'cliente'
         pagina = QWidget()
         principal = QVBoxLayout(pagina)
         principal.setContentsMargins(28, 20, 28, 14)
@@ -346,7 +422,11 @@ class JanelaBiblioteca(QMainWindow):
         cabecalho.addWidget(logo('indices', 225, 80))
         usuario = QVBoxLayout()
         usuario.addWidget(rotulo(f'Olá, {self.usuario.getNome()}', 'saudacao'))
-        usuario.addWidget(rotulo('Perfil: Cliente' if cliente else 'Perfil: Bibliotecário', 'muted'))
+        if self.usuario.getTipo() == 'cliente':
+            textoPerfil = 'Perfil: Cliente'
+        else:
+            textoPerfil = 'Perfil: Bibliotecário'
+        usuario.addWidget(rotulo(textoPerfil, 'muted'))
         cabecalho.addSpacing(22)
         cabecalho.addLayout(usuario)
         cabecalho.addStretch()
@@ -357,16 +437,23 @@ class JanelaBiblioteca(QMainWindow):
             cabecalho.addWidget(sair)
         principal.addLayout(cabecalho)
         self.abas = QTabWidget()
-        telas = {
-            'emprestimos': (self.criarAbaEmprestimos, 'Meus empréstimos' if cliente else 'Todos os empréstimos'),
-            'livros': (self.criarAbaAcervo, 'Acervo'),
-            'sobre': (self.criarAbaSobre, 'Sobre'),
-        }
         # A mesma chamada menu() recebe respostas diferentes das subclasses.
         for acao in self.opcoesMenu:
-            if acao in telas:
-                criarTela, titulo = telas[acao]
-                self.abas.addTab(criarTela(), titulo)
+            if acao == 'emprestimos':
+                if self.usuario.getTipo() == 'cliente':
+                    titulo = 'Meus empréstimos'
+                else:
+                    titulo = 'Todos os empréstimos'
+                paginaEmprestimos = self.criarAbaEmprestimos()
+                self.abas.addTab(paginaEmprestimos, titulo)
+
+            elif acao == 'livros':
+                paginaAcervo = self.criarAbaAcervo()
+                self.abas.addTab(paginaAcervo, 'Acervo')
+
+            elif acao == 'sobre':
+                paginaSobre = self.criarAbaSobre()
+                self.abas.addTab(paginaSobre, 'Sobre')
         principal.addWidget(self.abas, 1)
         rodape = QHBoxLayout()
         self.status = rotulo('Pronto para consultar seus dados.', 'mensagem')
@@ -408,17 +495,18 @@ class JanelaBiblioteca(QMainWindow):
         if linha < 0 or linha >= len(self.emprestimos):
             mensagem(self.status, 'Selecione um empréstimo para renovar.', 'erro')
             return
-        e = self.emprestimos[linha]
+        emprestimo = self.emprestimos[linha]
         self.botaoRenovar.setEnabled(False)
         try:
-            renovarEmprestimo(self.biblioteca, self.gerenciador, self.usuario, e)
+            renovarEmprestimo(self.biblioteca, self.gerenciador, self.usuario, emprestimo)
         except ValueError as erro:
             mensagem(self.status, str(erro), 'erro')
         except OSError:
             mensagem(self.status, 'Renovação não confirmada: falha ao salvar. Tente novamente.', 'erro')
         else:
-            self.atualizarEmprestimos(e.getCodigo())
-            mensagem(self.status, f'Renovação registrada. Nova devolução: {e.getDataDevolucao():%d/%m/%Y}.', 'sucesso')
+            self.atualizarEmprestimos(emprestimo.getCodigo())
+            novaData = emprestimo.getDataDevolucao().strftime('%d/%m/%Y')
+            mensagem(self.status, f'Renovação registrada. Nova devolução: {novaData}.', 'sucesso')
         finally:
             self.selecionarEmprestimo()
 

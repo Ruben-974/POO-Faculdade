@@ -39,7 +39,7 @@ class Usuario(ABC):
     def setSenha(self, senha):
         self.__senha = senha
 
-    # Exige a implementação de menu() nas subclasses concretas.
+    # Cada perfil fornece suas ações para o console e a interface gráfica.
     @abstractmethod
     def menu(self):
         pass

@@ -46,8 +46,8 @@ class GerenciadorDeArquivos:
         except PermissionError:
             print('Houve uma falha de permissão no arquivo usuarios.txt')
             raise
-        except OSError:
-            print('Error')
+        except OSError as erro:
+            print(f'\n  [!] Não foi possível ler os arquivos de dados: {erro}')
             raise
 
 

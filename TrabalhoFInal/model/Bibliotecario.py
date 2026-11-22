@@ -8,15 +8,9 @@ class Bibliotecario(Usuario):
 
     def menu(self):
         # Este perfil consulta todos os empréstimos, sem opção de renovação.
-        return (
-            '\n================================================================\n'
-            '  MENU DO BIBLIOTECÁRIO\n'
-            '----------------------------------------------------------------\n'
-            '\n'
-            '  1 - Visualizar Empréstimos\n'
-            '  2 - Visualizar Livros\n'
-            '  3 - Sobre\n'
-            '  4 - Sair\n'
-            '\n'
-            '================================================================'
-        )
+        return {
+            'emprestimos': 'Visualizar Empréstimos',
+            'livros': 'Visualizar Livros',
+            'sobre': 'Sobre',
+            'sair': 'Sair',
+        }
